@@ -3,8 +3,7 @@ package cards.and.stuff;
 public class StandardDeckBuilder implements DeckBuilder{
 	private Deck deck;
 	
-	@Override
-	public void createDeck(){
+	private void createDeck(){
 		deck = new Deck();
 		for(int i = 0; i< 13 ; i++)
 		{
