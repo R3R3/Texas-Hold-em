@@ -4,7 +4,7 @@ public class StandardDeckBuilder implements DeckBuilder{
 	private Deck deck;
 	
 	@Override
-	public void createDeck() throws CardException {
+	public void createDeck(){
 		deck = new Deck();
 		for(int i = 0; i< 13 ; i++)
 		{

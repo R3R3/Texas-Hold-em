@@ -14,9 +14,8 @@ public class CardContainer {
 		this.cards = (LinkedList<Card>) cards;
 	}
 		
-	public boolean addCard(Card card) throws CardException{
+	public boolean addCard(Card card){
 		if(cards.contains(card)){
-			//cards.add(card);
 			return false;
 		}
 		else{
