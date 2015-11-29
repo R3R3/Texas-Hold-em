@@ -31,19 +31,19 @@ public class Table {
 	private void give2CardsToPlayers(){
 		for(int i = 0; i < 2; i++){
 			for(Player p : players){
-				p.giveCard(deck.getCard());
+				deck.giveCardTo(p.getHand());
 			}
 		}
 	}
 	
 	private void giveTableCards(String set){
 		if(set == "flop"){
-			tableCards.addCard(deck.getCard());
-			tableCards.addCard(deck.getCard());
-			tableCards.addCard(deck.getCard());
+			deck.giveCardTo(tableCards);
+			deck.giveCardTo(tableCards);
+			deck.giveCardTo(tableCards);
 		}
 		else if(set == "turn" || set == "river"){
-			tableCards.addCard(deck.getCard());
+			deck.giveCardTo(tableCards);
 		}
 	}
 	
@@ -58,6 +58,14 @@ public class Table {
 		for (Player p : players){
 			getResult(p);
 		}
+	}
+	
+	public static void main(String[] args){
+		Table t = new Table();
+		t.prepareDeck(new StandardDeckBuilder());
+		t.prepareTableCards();
+		t.deck.giveCardTo(t.tableCards);
+		t.tableCards.giveCardTo(t.tableCards);
 	}
 	
 }

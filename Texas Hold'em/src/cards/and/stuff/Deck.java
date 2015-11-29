@@ -4,10 +4,13 @@ import java.util.LinkedList;
 import java.util.Random;
 
 public class Deck extends CardContainer{
-	private volatile LinkedList <Card> cards;
 	
 	protected Deck(){
-		super();
+	}
+	
+	public boolean addCard(Card card){
+		cards.add(card);
+		return true;
 	}
 	
 	protected synchronized void shuffle(){

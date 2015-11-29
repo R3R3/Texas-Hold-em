@@ -3,32 +3,27 @@ package cards.and.stuff;
 import java.util.LinkedList;
 import java.util.List;
 
-public class CardContainer {
-	private LinkedList <Card> cards;
+public abstract class CardContainer {
+	protected LinkedList <Card> cards;
 	
 	public CardContainer (){
-		cards = new LinkedList<Card>();
+		this.cards = new LinkedList<Card>();
 	}
 	
 	public CardContainer (List<Card> cards){
 		this.cards = (LinkedList<Card>) cards;
 	}
-		
-	public boolean addCard(Card card){
-		if(cards.contains(card)){
-			return false;
-		}
-		else{
-			cards.add(card);
-			return true;
-		}
+	
+	public void giveCardTo(CardContainer con){
+		Card card = cards.removeFirst();
+		con.addCard(card);
 	}
 	
-	public CardContainer getAllCards(){
-		return this;
+	private void addCard(Card card){
+		cards.add(card);
 	}
 	
-	public Card getCard(){
-		return cards.removeFirst();
+	public void reset(){
+		cards = new LinkedList<Card>();
 	}
 }
