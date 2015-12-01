@@ -1,9 +1,11 @@
 package table;
 
+import cards.and.stuff.CardContainer;
 import cards.and.stuff.Coins;
 
 public class Player {
 
+	
 	private Coins coins;
 	private MyHand myhand;
 	private int ID;

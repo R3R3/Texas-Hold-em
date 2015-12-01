@@ -10,4 +10,8 @@ public class MyHand extends CardContainer {
 	MyHand(){
 	}
 	
+	public void sendToCheck(CheckPatterns p){
+		p.getHandCards(cards);
+	}
+	
 }

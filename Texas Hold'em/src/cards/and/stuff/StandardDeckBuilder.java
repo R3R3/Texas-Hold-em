@@ -12,7 +12,7 @@ public class StandardDeckBuilder implements DeckBuilder{
 			deck.addCard(new Card(i,Color.HEARTS));
 			deck.addCard(new Card(i,Color.SPADES));
 		}
-		deck.shuffle();		
+		deck.shuffle();	
 	}
 	
 	@Override

@@ -7,7 +7,6 @@ public class Table {
 	public TableCards tableCards;
 	public Deck deck;
 	Player[] players;
-	private Pattern pattern;
 	
 	private void prepareDeck(DeckBuilder builder){
 		try {
@@ -25,6 +24,7 @@ public class Table {
 	
 	private void prepareTableCards(){
 		tableCards = new TableCards();
+		CheckPatterns.setTableCards(tableCards);
 		
 	}
 	
@@ -44,20 +44,20 @@ public class Table {
 		}
 		else if(set == "turn" || set == "river"){
 			deck.giveCardTo(tableCards);
+			CheckPatterns.setTableCards(tableCards);
 		}
 	}
 	
-	private void getResult(Player p){
+	private void getResult(Player p) throws TableNotSend{
 		
 		int[] result;
-		result = pattern.getResult(p.getHand());
+		result = CheckPatterns.getResult(p.getHand());
 	}
 	
 	private void findWinner(){
-		pattern = new Pattern(tableCards);
-		for (Player p : players){
-			getResult(p);
-		}
+		//for (Player p : players){
+			//getResult(p);
+		//}
 	}
 	
 	public static void main(String[] args){
