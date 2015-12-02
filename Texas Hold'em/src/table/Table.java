@@ -1,5 +1,7 @@
 package table;
 
+import java.util.ArrayList;
+
 import cards.and.stuff.*;
 
 public class Table {
@@ -48,16 +50,27 @@ public class Table {
 		}
 	}
 	
-	private void getResult(Player p) throws TableNotSend{
-		
-		int[] result;
-		result = CheckPatterns.getResult(p.getHand());
+	private int[] getResult(Player p) throws TableNotSend{
+		return CheckPatterns.getResult(p.getHand());
 	}
 	
-	private void findWinner(){
-		//for (Player p : players){
-			//getResult(p);
-		//}
+	private ArrayList<Player> findWinner(){
+		int[]t = new int []{-1};
+		ArrayList<Player> winners = new ArrayList<Player>();
+		CheckPatterns.setTableCards(tableCards);
+		int i = 0;
+		for (Player p : players){
+			try {
+				i = CheckPatterns.check(getResult(p), t);
+			} catch (TableNotSend e) {}
+			if(i==1){
+				winners=new ArrayList<Player>();
+				winners.add(p);
+			}else if(i==0){
+				winners.add(p);
+			}		
+		}
+		return winners;
 	}
 	
 	public static void main(String[] args){

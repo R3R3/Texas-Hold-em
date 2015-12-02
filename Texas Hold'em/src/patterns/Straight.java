@@ -1,36 +1,51 @@
 package patterns;
-import java.util.ArrayList;
-import java.util.LinkedList;
 
-import cards.and.stuff.*;
+import java.util.ArrayList;
+import java.util.TreeMap;
+
+import cards.and.stuff.Color;
 
 public class Straight {
 	
-	public static boolean ifIs(LinkedList<Card> list){
-		ArrayList<Integer>figure = new ArrayList<Integer>();
-		for(Card c : list){
-			figure.add(c.getFigure());
+	public static int ifIs(MapHolder holder){
+		TreeMap<Integer,ArrayList<Color>> map = holder.getMap();
+		int size = map.keySet().size();
+		int max=-1;
+		if(size <5)
+			return -1;
+		Integer[] tab = new Integer[size];
+		
+		int key = -1;
+		for(int j=0; j< size; j++)
+		{
+			tab[j]=map.higherKey(key);
+			key=tab[j];
 		}
-		figure.sort(null);
-		boolean t = true;
-		for(int i = 1;i<5;i++){
-			if(figure.get(i) > figure.get(i-1))
-				t=false;
+
+		
+		if(tab[size-1].intValue() == 12 &&
+		tab[0].intValue() == 0  &&
+		tab[1].intValue() == 1 &&
+		tab[2].intValue() == 2 &&
+		tab[3].intValue() == 3
+		)
+		max=3;
+
+		int c = 0;
+		int i = size-1;
+		for(int j = size-1; j>1 && c!= 4;j--){
+			if(tab[j].intValue()-1 != tab[j-1].intValue()){
+				i = j-1;
+				c=0;
+			}
+			else{
+				c++;
+			}
 		}
-		figure = new ArrayList<Integer>();
-		for(Card c : list){
-			if(c.getFigure()==12)
-				figure.add(-1);
-			else
-				figure.add(c.getFigure());
-		}
-		figure.sort(null);
-		boolean f = true;
-		for(int i = 1;i<5;i++){
-			if(figure.get(i) > figure.get(i-1))
-				f=false;
-		}
-		return t||f;
+		
+		if(c==4)
+			max = tab[i].intValue();
+		return max;
 	}
 
 }

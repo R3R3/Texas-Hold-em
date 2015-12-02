@@ -1,6 +1,5 @@
 package table;
 
-import cards.and.stuff.CardContainer;
 import cards.and.stuff.Coins;
 
 public class Player {
