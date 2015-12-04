@@ -10,9 +10,9 @@ public abstract class CardContainer {
 		this.cards = new LinkedList<Card>();
 	}
 	
-	public CardContainer (List<Card> cards){
+	/*public CardContainer (List<Card> cards){
 		this.cards = (LinkedList<Card>) cards;
-	}
+	}*/
 	
 	public void giveCardTo(CardContainer con){
 		Card card = cards.removeFirst();
