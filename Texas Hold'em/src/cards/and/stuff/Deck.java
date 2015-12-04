@@ -8,7 +8,7 @@ public class Deck extends CardContainer{
 	protected Deck(){
 	}
 	
-	public boolean addCard(Card card){
+	protected boolean addCard(Card card){
 		cards.add(card);
 		return true;
 	}

@@ -16,14 +16,14 @@ public class StandardDeckBuilder implements DeckBuilder{
 	}
 	
 	@Override
-	public Deck getDeck() throws CardException {
+	public Deck getDeck(){
 		if(deck == null)
 			createDeck();
 		return deck;
 	}
 	
 	@Override
-	public void resetDeck() throws CardException {
+	public void resetDeck(){
 		deck = null;
 	}
 
