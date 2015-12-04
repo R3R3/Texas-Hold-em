@@ -11,11 +11,7 @@ public class Table {
 	Player[] players;
 	
 	private void prepareDeck(DeckBuilder builder){
-		try {
 			deck = builder.getDeck();
-		} catch (CardException e) {
-			e.getMessage();
-		}
 	}
 	
 	private void createPlayers(int amount, int basecash) throws PlayerException{
