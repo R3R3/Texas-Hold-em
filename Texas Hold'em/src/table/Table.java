@@ -1,6 +1,8 @@
 package table;
 
+import java.net.Socket;
 import java.util.ArrayList;
+import java.util.Random;
 
 import cards.and.stuff.*;
 
@@ -8,16 +10,27 @@ public class Table {
 
 	public TableCards tableCards;
 	public Deck deck;
-	Player[] players;
+	public Player[] players;
+	private int num_Players;
+	
+	public Table(int amount){
+		num_Players = amount;
+		prepareDeck(new StandardDeckBuilder());
+		prepareTableCards();
+		players = new Player[num_Players];
+	}
+	
+	private void getRandomDealer() {
+		Random random = new Random();
+		players[random.nextInt(num_Players)].isDealer = true;
+	}
 	
 	private void prepareDeck(DeckBuilder builder){
 			deck = builder.getDeck();
 	}
 	
-	private void createPlayers(int amount, int basecash) throws PlayerException{
-		for(int i=0; i< amount; i++){
-			players[i] = new Player(basecash,i);
-		}
+	public void createPlayers(int ID, int basecash, Socket socket) throws PlayerException {
+			players[ID] = new Player(basecash,ID, socket);
 	}
 	
 	private void prepareTableCards(){
@@ -68,7 +81,7 @@ public class Table {
 		}
 		return winners;
 	}
-	
+	/*
 	public static void main(String[] args){
 		Table t = new Table();
 		t.prepareDeck(new StandardDeckBuilder());
@@ -76,5 +89,5 @@ public class Table {
 		t.deck.giveCardTo(t.tableCards);
 		t.tableCards.giveCardTo(t.tableCards);
 	}
-	
+	*/
 }
