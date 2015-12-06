@@ -16,8 +16,10 @@ public class Player extends Thread{
 	private int ID;
 	private BufferedReader input;
     private PrintWriter output;
+    //nie wiem czy siê przyda ale póki co jest. Player wie o istnieniu innych, a na swoim miejscu znajduje nulla.
+    public Player[] opponents;
 
-	
+    
 	public boolean isDealer = false;
 	
 	Player (int coins, int ID, Socket socket) {
@@ -34,6 +36,10 @@ public class Player extends Thread{
 		catch (IOException e) {
 			System.out.println("Dead Player :(" + e);
 		}
+	}
+	
+	public void setOpponents() {
+		
 	}
 	
 	public int getCoins (){

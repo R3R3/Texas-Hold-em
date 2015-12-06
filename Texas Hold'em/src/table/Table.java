@@ -20,6 +20,20 @@ public class Table {
 		players = new Player[num_Players];
 	}
 	
+	private void setNextDealer() {
+		for(int i=0;i<num_Players;i++){
+			if(players[i].isDealer){
+				players[i].isDealer = false;
+				if(i+1 == num_Players){
+					players[0].isDealer = true;
+				} else {
+					players[i+1].isDealer = true;
+				}
+				break;
+			}
+		}
+	}
+	
 	private void getRandomDealer() {
 		Random random = new Random();
 		players[random.nextInt(num_Players)].isDealer = true;
