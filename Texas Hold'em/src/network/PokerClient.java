@@ -232,7 +232,7 @@ public class PokerClient {
 		JPanel cards = new JPanel();
 		cards.setLayout(new GridLayout(1,5,20,20));
 		for(int i=0;i<5;i++){
-			tableCards[i] = new JLabel("");
+			tableCards[i] = new JLabel(" ");
 			tableCards[i].setOpaque(true);
 	//		tableCards[i].setSize(20, 40);
 			tableCards[i].setBorder(BorderFactory.createLineBorder(Color.BLACK));
