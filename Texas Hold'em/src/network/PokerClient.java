@@ -12,10 +12,34 @@ import java.io.InputStreamReader;
 import java.io.PrintWriter;
 import java.net.Socket;
 
+import javax.swing.BorderFactory;
 import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
+import javax.swing.JTextField;
+
+/*
+
+Client-Server relation is based on sending and receiving specified commands. 
+Commands are represented as string. First part is the type of an actionm, second - optional - represents argument.
+Not every command needs an argument
+Possible commands that can be sent:
+
+Client ---> Server
+BET <n> (unsigned int)
+RAISE <n> (unsigned int)
+CHECK
+CALL
+FOLD
+ALL-IN
+
+Server ---> Client
+MESSAGE <text> (String)
+WELCOME <n> (int)
+AMOUNT <n> (int)
+to be continued...	
+*/
 
 public class PokerClient {
 	
@@ -28,51 +52,81 @@ public class PokerClient {
     private JFrame frame = new JFrame("Texas Hold'em !");
     private JLabel messageLabel = new JLabel("");
     private JLabel Pot = new JLabel("Pot: ");
-    //0-Bet, 1-Check, 2-Raise, 3-Call, 4-Fold, 5-All-in
+    //0-Bet, 1-Raise, 2-Check, 3-Call, 4-Fold, 5-All-in
     private JButton[] buttons = new JButton[6];
     private JLabel[] players;
+    private JTextField betText = new JTextField(5);
+    private JTextField raiseText = new JTextField(5);
+    private JPanel board = new JPanel(new BorderLayout( 20, 20));
+    private JLabel[] tableCards = new JLabel[5];
+    private JLabel[][] activeResults;
 	
 	public PokerClient(String ServerAddress) throws Exception { 
 		socket = new Socket(ServerAddress, PORT);
 		in = new BufferedReader(new InputStreamReader(socket.getInputStream()));
 		out = new PrintWriter(socket.getOutputStream(), true);
-		//TODO: GUI
+		
 		messageLabel.setBackground(Color.LIGHT_GRAY);
 		messageLabel.setFont(new Font(Font.DIALOG,Font.PLAIN,15));
 		messageLabel.setHorizontalAlignment(JLabel.CENTER);
 		frame.getContentPane().add(messageLabel,"North");
-		JPanel board = new JPanel();
+		
 		JPanel boardPanel = new JPanel();
+		
 	    JPanel buttonsPanel = new JPanel();
 	    
 		boardPanel.setLayout(new BorderLayout());
+		
 		
 		buttons[0] = new JButton("Bet");
 		buttons[0].addActionListener(new ActionListener(){
 			@Override
 			public void actionPerformed(ActionEvent e) {
 				//when pressed
-				//TODO: adjustable value for bet
-				out.println("BET " );
+				int bet =0;
+				try {
+					bet = Integer.parseInt(betText.getText());
+					if(bet <= 0){
+						throw new NumberFormatException();
+					}
+				} catch (NumberFormatException x) {
+					System.out.println("betText data error");
+				}
+				
+				out.println("BET " + Integer.toString(bet));
+				System.out.println("BET " + Integer.toString(bet));
+				betText.setText("");
 			}
 			}
 		);
-		buttons[1] = new JButton("Check");
-		buttons[1].addActionListener(new ActionListener(){
-			@Override
-			public void actionPerformed(ActionEvent e) {
-				//when pressed
-				out.println("CHECK " );
-			}
-			}
-		);
-		buttons[2] = new JButton("Raise");
+		buttons[2] = new JButton("Check");
 		buttons[2].addActionListener(new ActionListener(){
 			@Override
 			public void actionPerformed(ActionEvent e) {
 				//when pressed
-				//TODO: adjustable value for raise
-				out.println("RAISE " );
+				out.println("CHECK " );
+				System.out.println("CHECK " );
+			}
+			}
+		);
+		buttons[1] = new JButton("Raise");
+		buttons[1].addActionListener(new ActionListener(){
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				//when pressed
+				int raise =0;
+				try {
+					raise = Integer.parseInt(raiseText.getText());
+					if(raise <= 0){
+						throw new NumberFormatException();
+					}
+				} catch (NumberFormatException x) {
+					System.out.println("raiseText data error");
+				}
+				
+				out.println("RAISE " + Integer.toString(raise));
+				System.out.println("RAISE " + Integer.toString(raise));
+				raiseText.setText("");
 			}
 			}
 		);
@@ -82,6 +136,7 @@ public class PokerClient {
 			public void actionPerformed(ActionEvent e) {
 				//when pressed
 				out.println("CALL " );
+				System.out.println("CALL " );
 			}
 			}
 		);
@@ -91,6 +146,7 @@ public class PokerClient {
 			public void actionPerformed(ActionEvent e) {
 				//when pressed
 				out.println("FOLD " );
+				System.out.println("FOLD " );
 			}
 			}
 		);
@@ -100,16 +156,19 @@ public class PokerClient {
 			public void actionPerformed(ActionEvent e) {
 				//when pressed
 				out.println("ALL-IN " );
+				System.out.println("ALL-IN " );
 			}
 			}
 		);
-		buttonsPanel.setLayout(new GridLayout(1,6,20,0));
+		buttonsPanel.setLayout(new GridLayout(2,4,20,20));
 		for(int i=0;i<6;i++){
+			if(i==0){
+				buttonsPanel.add(betText);
+			} else if (i==1) {
+				buttonsPanel.add(raiseText);
+			}
 			buttonsPanel.add(buttons[i]);
-		}
-		
-		
-		//TODO: JPanel board
+		}		
 		
 		
 		Pot.setFont(new Font(Font.DIALOG,Font.PLAIN,40));
@@ -140,6 +199,16 @@ public class PokerClient {
 				if(response.startsWith("MESSAGE")) {
 					messageLabel.setText(response.substring(8));
 				}
+				else if (response.startsWith("AMOUNT")) {
+					int playerNum = Integer.parseInt(response.substring(7));
+					setMainBoard(playerNum);
+					frame.pack();
+				}
+				else if (response.startsWith("SETCASH")){
+					int basecash = Integer.parseInt(response.substring(8));
+					setBasecash(basecash);
+					frame.pack();
+				}
 			}
 		}
 		finally {
@@ -149,13 +218,67 @@ public class PokerClient {
 		
 	}
 	
+	private void setBasecash(int basecash) {
+		
+		for(int i=0;i<activeResults.length;i++){
+			activeResults[i][2].setText(Integer.toString(basecash));
+		}
+	}
+
+	private void setMainBoard(int PN) 
+	{
+		
+		//TODO: JPanel board implementation
+		JPanel cards = new JPanel();
+		cards.setLayout(new GridLayout(1,5,20,20));
+		for(int i=0;i<5;i++){
+			tableCards[i] = new JLabel("");
+			tableCards[i].setOpaque(true);
+	//		tableCards[i].setSize(20, 40);
+			tableCards[i].setBorder(BorderFactory.createLineBorder(Color.BLACK));
+			tableCards[i].setBackground(Color.WHITE);
+			cards.add(tableCards[i]);
+		}
+		
+		board.add(cards, BorderLayout.NORTH);
+		
+		JPanel view = new JPanel();
+		view.setLayout(new GridLayout(PN,6,10,20));
+		activeResults = new JLabel[PN][6];
+		
+		for(int i=0;i<PN;i++){
+			for(int j=0;j<6;j++){
+				activeResults[i][j] = new JLabel("");
+				activeResults[i][j].setOpaque(true);
+				if(i == MyID){
+					activeResults[i][j].setBorder(BorderFactory.createLineBorder(Color.RED));
+				}
+				else {
+					activeResults[i][j].setBorder(BorderFactory.createLineBorder(Color.BLACK));
+				}
+				if(j==1){
+					activeResults[i][j].setText(Integer.toString(i));
+				}
+				else if( j==3){
+					activeResults[i][j].setText("0");
+				}
+				else if(j==4 || j==5){
+					activeResults[i][j].setBackground(Color.WHITE);
+				}
+				view.add(activeResults[i][j]);
+			}
+		}
+		
+		board.add(view, BorderLayout.CENTER);
+	}
+	
 	public static void main(String[] args) throws Exception {
 		
 		String serveraddress = (args.length == 0) ? "localhost" : args[0];
 		PokerClient client = new PokerClient(serveraddress);
 		
 		client.frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		client.frame.setSize(600, 800);
+		client.frame.setSize(400, 400);
 		client.frame.setResizable(false);
 		client.frame.setVisible(true);
 		

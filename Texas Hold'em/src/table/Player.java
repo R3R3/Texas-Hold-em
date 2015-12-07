@@ -22,7 +22,8 @@ public class Player extends Thread{
     
 	public boolean isDealer = false;
 	
-	Player (int coins, int ID, Socket socket) {
+	Player (int coins, int ID, Socket socket) 
+	{
 		this.coins = new Coins(coins);
 		this.ID = ID;
 		myhand = new MyHand();
@@ -38,10 +39,6 @@ public class Player extends Thread{
 		}
 	}
 	
-	public void setOpponents() {
-		
-	}
-	
 	public int getCoins (){
 		return coins.amount();
 	}
@@ -54,14 +51,28 @@ public class Player extends Thread{
 		return myhand;
 	}
 	
-	public void run() {
+	private int getPlayerNum() {
+		return opponents.length;
+	}
+	
+	public void run() 
+	{
 		
 		try {
 			output.println("MESSAGE All players connected");
+			try {
+				sleep(500);
+			} catch (InterruptedException e) {}
+			System.out.println("trying to send amount and setcash");
+			output.println("AMOUNT " + Integer.toString(getPlayerNum()));
+			try {
+				sleep(500);
+			} catch (InterruptedException e) {}
+			output.println("SETCASH " + Integer.toString(getCoins()));
 			
 			while(true){
 				if (isDealer) {
-					output.println("MESSAGE Your move");
+					output.println("MESSAGE Your turn !");
 				}
 			}
 			
