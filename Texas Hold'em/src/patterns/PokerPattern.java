@@ -15,7 +15,7 @@ public class PokerPattern {
 			int i = map.firstKey().intValue();
 			int j = i-1;
 			int c = 0;
-			while(c!=5 && i != 0){
+			while(c!=5 && i != -5){
 				if(map.get(i).contains(color))
 				{
 					if(i-j==1)
@@ -24,16 +24,16 @@ public class PokerPattern {
 						c=1;
 					
 					j=i;
-					i = (map.lowerKey(i)==null)?0:map.higherKey(i).intValue();
+					i = (map.higherKey(i)==null)?-5:map.higherKey(i).intValue();
 				}
 				else
 				{
-					i=(map.lowerKey(i)==null)?0:map.higherKey(i).intValue();
+					i=(map.higherKey(i)==null)?-5:map.higherKey(i).intValue();
 					c=0;
 					j=i-1;
 				}
 			}
-			i = (i!=0)?map.lowerKey(i):map.lastKey();
+			i = (i!=-5)?map.lowerKey(i):map.lastKey();
 			
 			if(c != 5 &&
 				map.get(12).contains(color) &&

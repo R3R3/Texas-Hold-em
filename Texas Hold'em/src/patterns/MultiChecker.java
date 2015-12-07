@@ -100,7 +100,7 @@ public class MultiChecker {
 		}
 		if(v1==-1)
 			return null;
-		else if(v2 == -1)
+		else if(v2 != -1)
 			return new int []{2,v1,v2,v3};
 			else return new int[]{1,v1,v3,v4,v5};
 				

@@ -66,17 +66,5 @@ public class HighTest {
 		list.add(CardGen.genCard(11,cards.and.stuff.Color.CLUBS));
 		return list;
 	}
-	
-	protected static LinkedList<Card> genList2(){
-		LinkedList<Card> list = new LinkedList<Card>();
-		list.add(CardGen.genCard(7,cards.and.stuff.Color.DIAMOND));
-		list.add(CardGen.genCard(9,cards.and.stuff.Color.HEARTS));
-		list.add(CardGen.genCard(2,cards.and.stuff.Color.DIAMOND));
-		list.add(CardGen.genCard(4,cards.and.stuff.Color.DIAMOND));
-		list.add(CardGen.genCard(12,cards.and.stuff.Color.DIAMOND));
-		list.add(CardGen.genCard(10,cards.and.stuff.Color.SPADES));
-		list.add(CardGen.genCard(11,cards.and.stuff.Color.CLUBS));
-		return list;
-	}
 
 }
