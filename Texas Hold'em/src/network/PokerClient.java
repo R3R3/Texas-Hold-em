@@ -75,7 +75,7 @@ public class PokerClient {
 		
 	    JPanel buttonsPanel = new JPanel();
 	    
-		boardPanel.setLayout(new BorderLayout());
+		boardPanel.setLayout(new BorderLayout(20,20));
 		
 		
 		buttons[0] = new JButton("Bet");
@@ -172,11 +172,17 @@ public class PokerClient {
 		
 		
 		Pot.setFont(new Font(Font.DIALOG,Font.PLAIN,40));
+		Pot.setOpaque(true);
+		Pot.setBackground(Color.LIGHT_GRAY);
 		Pot.setHorizontalAlignment(JLabel.CENTER);
 		Pot.setVerticalAlignment(JLabel.CENTER);
 		
 		boardPanel.add(Pot,BorderLayout.NORTH);
 		boardPanel.add(board, BorderLayout.CENTER);
+		JLabel label = new JLabel(" ");
+		label.setOpaque(true);
+		label.setBackground(Color.LIGHT_GRAY);
+		boardPanel.add(label ,BorderLayout.SOUTH);
 		boardPanel.add(buttonsPanel, BorderLayout.SOUTH);
 		
 		boardPanel.setBackground(Color.LIGHT_GRAY);
