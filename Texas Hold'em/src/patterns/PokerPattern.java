@@ -7,12 +7,11 @@ import cards.and.stuff.Color;
 
 public class PokerPattern {
 	
-	public static int ifIs(MapHolder holder){
-		Color color = ColorPattern.ifSame(holder);
+	public static int ifIs(TreeMap<Integer,ArrayList<Color>> map){
+		Color color = ColorPattern.ifSame(map);
 		if(color == null)
 			return -1;
 		else{
-			TreeMap<Integer,ArrayList<Color>> map = holder.getMap();
 			int i = map.firstKey().intValue();
 			int j = i-1;
 			int c = 0;

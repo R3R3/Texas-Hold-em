@@ -7,8 +7,7 @@ import cards.and.stuff.Color;
 
 public class Straight {
 	
-	public static int ifIs(MapHolder holder){
-		TreeMap<Integer,ArrayList<Color>> map = holder.getMap();
+	public static int ifIs(TreeMap<Integer,ArrayList<Color>> map){
 		int size = map.keySet().size();
 		int max=-1;
 		if(size <5)

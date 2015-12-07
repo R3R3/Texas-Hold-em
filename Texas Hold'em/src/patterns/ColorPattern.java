@@ -6,10 +6,9 @@ import cards.and.stuff.*;
 
 public class ColorPattern {
 
-	public static Color ifSame(MapHolder holder){
+	public static Color ifSame(TreeMap<Integer,ArrayList<Color>> map){
 		Color res = null;
 		int i =0;
-		TreeMap<Integer,ArrayList<Color>> map = holder.getMap();
 		int size = map.keySet().size();
 		
 		if(size < 5)

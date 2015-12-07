@@ -1,11 +1,14 @@
 package table;
 
+import java.util.ArrayList;
 import java.util.LinkedList;
+import java.util.TreeMap;
 
 import cards.and.stuff.Card;
 import cards.and.stuff.CardContainer;
+import cards.and.stuff.Color;
 import patterns.Evaluator;
-import patterns.MapHolder;
+import patterns.MapMaker;
 
 public class CheckPatterns {
 
@@ -40,8 +43,8 @@ public class CheckPatterns {
 	public static int[] getResult(MyHand hand) throws TableNotSend{
 		CheckPatterns p = new CheckPatterns(hand);
 		p.merge();
-		MapHolder holder = new MapHolder(p.all);
-		return Evaluator.value(holder);
+		TreeMap<Integer,ArrayList<Color>> map = MapMaker.getMulti(p.all);
+		return Evaluator.value(map);
 	}
 	
 	public static int check(int [] a, int []b){

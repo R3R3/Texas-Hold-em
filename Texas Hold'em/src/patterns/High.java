@@ -7,8 +7,7 @@ import cards.and.stuff.Color;
 
 public class High {
 	
-	public static int[] getHigh(MapHolder holder){
-		TreeMap<Integer,ArrayList<Color>> map = holder.getMap();
+	public static int[] getHigh(TreeMap<Integer,ArrayList<Color>> map){
 		int []t = new int [map.keySet().size()+1];
 		t[0]=0;
 		int i = 20;
@@ -22,8 +21,7 @@ public class High {
 		return t;
 	}
 	
-	public static int[] getHigh(MapHolder holder,Color color){
-		TreeMap<Integer,ArrayList<Color>> map = holder.getMap();
+	public static int[] getHigh(TreeMap<Integer,ArrayList<Color>> map,Color color){
 		int []t = new int [map.keySet().size()+1];
 		t[0]=4;
 		int i = 20;

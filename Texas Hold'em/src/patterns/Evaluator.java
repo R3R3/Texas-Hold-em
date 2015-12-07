@@ -6,12 +6,12 @@ import java.util.TreeMap;
 import cards.and.stuff.Color;
 
 public class Evaluator {
-	public static int[] value(MapHolder holder){
-		TreeMap<Integer,ArrayList<Color>> map = holder.getMap();
+	public static int[] value(TreeMap<Integer,ArrayList<Color>> map){
+
 		int v;
 		int [] t;
 		//Poker
-		v = PokerPattern.ifIs(holder);
+		v = PokerPattern.ifIs(map);
 		if(v>-1)
 			return new int [] {8,v};
 		//Four of a kind
@@ -24,13 +24,13 @@ public class Evaluator {
 			if(t[0] == 6)
 				return t;
 		//Straight
-		v=Straight.ifIs(holder);
+		v=Straight.ifIs(map);
 		if(v!=-1)
 			return new int []{5,v};
 		//Color
-		Color color = ColorPattern.ifSame(holder);
+		Color color = ColorPattern.ifSame(map);
 		if(color!=null)
-			return High.getHigh(holder, color);
+			return High.getHigh(map, color);
 		//Three of a kind
 		if(t!=null)
 			return t;
@@ -39,7 +39,7 @@ public class Evaluator {
 		if(t!=null)
 			return t;
 		//HighCard
-		return High.getHigh(holder);
+		return High.getHigh(map);
 	}
 
 }

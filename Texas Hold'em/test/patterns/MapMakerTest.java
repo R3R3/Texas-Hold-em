@@ -25,8 +25,8 @@ public class MapMakerTest extends CardGen{
 	public static void tryMapTest(TreeMap<Integer,ArrayList<Color>> map){
 		int i = map.keySet().size();
 		assertEquals(i,4);
-		i = map.get(new Integer(2)).size();
-		assertEquals(i,2);
+		i = map.get(new Integer(9)).size();
+		assertEquals(i,3);
 		Color c = map.get(new Integer(7)).get(0);
 		assertEquals(c,Color.SPADES);
 		/*
@@ -53,7 +53,9 @@ public class MapMakerTest extends CardGen{
 		list.add(CardGen.genCard(9,cards.and.stuff.Color.HEARTS));
 		list.add(CardGen.genCard(2,cards.and.stuff.Color.SPADES));
 		list.add(CardGen.genCard(2,cards.and.stuff.Color.DIAMOND));
-		list.add(CardGen.genCard(12,cards.and.stuff.Color.DIAMOND));		
+		list.add(CardGen.genCard(12,cards.and.stuff.Color.DIAMOND));
+		list.add(CardGen.genCard(9,cards.and.stuff.Color.DIAMOND));
+		list.add(CardGen.genCard(9,cards.and.stuff.Color.CLUBS));
 		return list;
 	}
 
