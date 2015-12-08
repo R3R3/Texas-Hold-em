@@ -16,7 +16,7 @@ public class PokerServer {
 		ServerSocket socket = new ServerSocket(1234);
 		System.out.println("Server is running");
 		int amount, basecash;
-
+		
 		try{
 			if(args.length != 2){System.out.println("args error");return;}
 			
