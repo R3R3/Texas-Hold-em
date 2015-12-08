@@ -3,10 +3,13 @@ package table;
 import static org.junit.Assert.*;
 
 import java.net.Socket;
+import java.util.ArrayList;
 
 import org.junit.Before;
 import org.junit.Ignore;
 import org.junit.Test;
+
+import cards.and.stuff.CardContainer;
 
 public class TableTest {
 
@@ -15,6 +18,13 @@ public class TableTest {
 	@Before
 	public void createTable(){
 		t = new Table(4);
+		try {
+			for(int i=0;i<4;i++){
+				t.createPlayers(i, 100, new Socket());
+			}
+		} catch (PlayerException e) {}
+		
+		
 	}
 	
 	@Test
@@ -24,16 +34,14 @@ public class TableTest {
 	
 	@Test
 	public void createPlayer(){
-		try {
-			t.createPlayers(0, 100, new Socket());
-		} catch (PlayerException e) {}
+		
 		assertNotNull(t.players[0]);
 		
 		assertEquals(100, t.players[0].getCoins());
+		assertEquals(0, t.players[0].getID());
 		
 	}
 	
-	@Ignore
 	@Test
 	public void dealerTest(){
 		t.getRandomDealer();
@@ -45,7 +53,68 @@ public class TableTest {
 		
 		assertTrue(testdealer);
 		
+		for(i=0;i<t.players.length;i++){
+			t.players[i].isDealer = false;
+		}
+		
+		t.players[1].isDealer = true;
 		t.setNextDealer();
-		assertTrue(t.players[(i+1 == t.players.length) ? 0 : i+1].isDealer);
+		
+		assertTrue(t.players[2].isDealer);
+		t.players[2].isDealer = false;
+		
+		t.players[3].isDealer = true;
+		t.setNextDealer();
+		
+		assertTrue(t.players[0].isDealer);
+	}
+	
+	@Test
+	public void give2CardsTest(){
+		
+		t.give2CardsToPlayers();
+		for(int i=0;i<t.players.length;i++){
+			assertNotNull(t.players[i].getHand());
+			
+			//TODO: iloœc kart?
+		}
+		
+	}
+	
+	@Ignore
+	@Test
+	public void setTableCardsTest() {
+		
+		//TODO: patrzenie na karty/iloœc?
+		t.giveTableCards("flop");
+		
+		t.giveTableCards("turn");
+		
+		t.giveTableCards("river");
+	}
+	
+	@Ignore
+	@Test
+	public void resultTest(){
+		
+		int[] testResult = null;
+		
+		t.give2CardsToPlayers();
+		
+		t.giveTableCards("flop");
+		t.giveTableCards("turn");
+		t.giveTableCards("river");
+		
+		try {
+			testResult = t.getResult(t.players[0]);
+		} catch (TableNotSend e) {}
+		
+		assertNotNull(testResult);
+		assertTrue((testResult.length > 0) ? true : false);
+		
+		ArrayList<Player> winners = new ArrayList<Player>();
+		winners = t.findWinner();
+		assertFalse(winners.isEmpty());
+		
 	}
 }

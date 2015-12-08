@@ -55,9 +55,13 @@ public class PokerServer {
 				
 			}
 			
-			while(true){
+			do {
 				//TODO: Game Logic
-			}
+				Game game = new Game(t);
+				if (game.isFinished){
+					break;
+				}
+			} while (true);
 			
 			
 		} 

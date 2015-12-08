@@ -53,7 +53,7 @@ public class Table {
 		
 	}
 	
-	private void give2CardsToPlayers(){
+	protected void give2CardsToPlayers(){
 		for(int i = 0; i < 2; i++){
 			for(Player p : players){
 				deck.giveCardTo(p.getHand());
@@ -61,7 +61,7 @@ public class Table {
 		}
 	}
 	
-	private void giveTableCards(String set){
+	protected void giveTableCards(String set){
 		if(set == "flop"){
 			deck.giveCardTo(tableCards);
 			deck.giveCardTo(tableCards);
@@ -73,11 +73,11 @@ public class Table {
 		}
 	}
 	
-	private int[] getResult(Player p) throws TableNotSend{
+	protected int[] getResult(Player p) throws TableNotSend{
 		return CheckPatterns.getResult(p.getHand());
 	}
 	
-	private ArrayList<Player> findWinner(){
+	protected ArrayList<Player> findWinner(){
 		int[]t = new int []{-1};
 		ArrayList<Player> winners = new ArrayList<Player>();
 		CheckPatterns.setTableCards(tableCards);
