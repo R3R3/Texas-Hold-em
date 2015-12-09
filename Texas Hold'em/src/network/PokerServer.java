@@ -9,6 +9,8 @@ import table.Table;
 
 public class PokerServer {
 	
+	PokerServer(){}
+	
 	static int TIMEOUT = 10;
 
 	public static void main(String[] args) throws Exception 
@@ -79,16 +81,16 @@ public class PokerServer {
 				}
 			} while (true);
 			
-			
 		} 
 		catch (NumberFormatException e) {
 			System.out.println("data error");
+			throw new NumberFormatException("data error");
 		} finally {
 			finalize(socket);
 		}
 	}
 	
-	private static ServerSocket getSocket(int PORT) throws ServerNotCreated {
+	protected static ServerSocket getSocket(int PORT) throws ServerNotCreated {
 		try {
 			return new ServerSocket(PORT);
 		} catch (IOException e) {
