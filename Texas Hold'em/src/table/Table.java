@@ -20,7 +20,7 @@ public class Table {
 		players = new Player[num_Players];
 	}
 	
-	protected void setNextDealer() {
+	public void setNextDealer() {
 		for(int i=0;i<num_Players;i++){
 			if(players[i].isDealer){
 				players[i].isDealer = false;
@@ -34,7 +34,7 @@ public class Table {
 		}
 	}
 	
-	protected void getRandomDealer() {
+	public void getRandomDealer() {
 		Random random = new Random();
 		players[random.nextInt(num_Players)].isDealer = true;
 	}
@@ -53,7 +53,7 @@ public class Table {
 		
 	}
 	
-	protected void give2CardsToPlayers(){
+	public void give2CardsToPlayers(){
 		for(int i = 0; i < 2; i++){
 			for(Player p : players){
 				deck.giveCardTo(p.getHand());
@@ -61,15 +61,20 @@ public class Table {
 		}
 	}
 	
-	protected void giveTableCards(String set){
-		if(set == "flop"){
-			deck.giveCardTo(tableCards);
-			deck.giveCardTo(tableCards);
-			deck.giveCardTo(tableCards);
-		}
-		else if(set == "turn" || set == "river"){
-			deck.giveCardTo(tableCards);
-			CheckPatterns.setTableCards(tableCards);
+	public void giveTableCards(TableCardsTurns turn){
+		switch(turn){
+			case FLOP:
+				deck.giveCardTo(tableCards);
+				deck.giveCardTo(tableCards);
+				deck.giveCardTo(tableCards);
+				break;
+			case TURN:
+				deck.giveCardTo(tableCards);
+				break;
+			case RIVER:
+				deck.giveCardTo(tableCards);
+				CheckPatterns.setTableCards(tableCards);
+				break;
 		}
 	}
 	
@@ -77,7 +82,7 @@ public class Table {
 		return CheckPatterns.getResult(p.getHand());
 	}
 	
-	protected ArrayList<Player> findWinner(){
+	public ArrayList<Player> findWinner(){
 		int[]t = new int []{-1};
 		ArrayList<Player> winners = new ArrayList<Player>();
 		CheckPatterns.setTableCards(tableCards);

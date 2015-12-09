@@ -86,11 +86,11 @@ public class TableTest {
 	public void setTableCardsTest() {
 		
 		//TODO: patrzenie na karty/iloœc?
-		t.giveTableCards("flop");
+		t.giveTableCards(TableCardsTurns.FLOP);
 		
-		t.giveTableCards("turn");
+		t.giveTableCards(TableCardsTurns.TURN);
 		
-		t.giveTableCards("river");
+		t.giveTableCards(TableCardsTurns.RIVER);
 	}
 	
 	@Ignore
@@ -101,9 +101,9 @@ public class TableTest {
 		
 		t.give2CardsToPlayers();
 		
-		t.giveTableCards("flop");
-		t.giveTableCards("turn");
-		t.giveTableCards("river");
+		t.giveTableCards(TableCardsTurns.FLOP);
+		t.giveTableCards(TableCardsTurns.TURN);
+		t.giveTableCards(TableCardsTurns.RIVER);
 		
 		try {
 			testResult = t.getResult(t.players[0]);
