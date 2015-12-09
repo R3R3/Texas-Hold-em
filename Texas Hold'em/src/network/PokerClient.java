@@ -234,7 +234,6 @@ public class PokerClient {
 	private void setMainBoard(int PN) 
 	{
 		
-		//TODO: JPanel board implementation
 		JPanel cards = new JPanel();
 		cards.setLayout(new GridLayout(1,5,20,20));
 		for(int i=0;i<5;i++){

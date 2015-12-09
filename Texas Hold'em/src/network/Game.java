@@ -4,6 +4,8 @@ import table.Table;
 
 public class Game {
 
+	public GameParameters parameters = new GameParameters();
+	
 	public Table table;
 	//End of the game
 	public boolean isFinished = false;
@@ -12,7 +14,12 @@ public class Game {
 		this.table = table;
 	}
 	
+	public void StartGame(){
+		
+	}
 	
-	
+	private void EndGame() {
+		isFinished = true;
+	}
 	
 }
