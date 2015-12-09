@@ -23,22 +23,24 @@ public class PokerServer {
 			return;
 		}
 		System.out.println("Server is running");
-		int amount, basecash;
+		int amount, basecash, smallblind, bigblind;
 		GameMode mode;
 		
 		try{
-			if(args.length < 2 || args.length > 3){System.out.println("args error");return;}
+			if(args.length < 4 || args.length > 5){System.out.println("args error");return;}
 			
 			amount = Integer.parseInt(args[0]);
 			basecash = Integer.parseInt(args[1]);
+			smallblind = Integer.parseInt(args[2]);
+			bigblind = Integer.parseInt(args[3]);
 			
-			if(amount < 2 || amount > 11 || basecash <= 0){
+			if(amount < 2 || amount > 11 || smallblind <= 0 || bigblind < smallblind || basecash <= 0 + bigblind){
 			System.out.println("incompatible data");
 			return;	
 			}
 			
 			try {
-			mode = GameMode.setMode(args[2]);
+			mode = GameMode.setMode(args[4]);
 			}
 			catch(ArrayIndexOutOfBoundsException e){
 				// not given -> setting default
@@ -71,15 +73,13 @@ public class PokerServer {
 				t.players[i].start();	
 			}
 			
+			//game needs only our table and chosen mode plus wages
 			Game game = new Game(t);
-			do {
-				game.parameters.setMode(mode);
-				game.StartGame();
-				
-				if (game.isFinished){
-					break;
-				}
-			} while (true);
+			game.parameters.setMode(mode);
+			game.parameters.setSmallBlind(smallblind);
+			game.parameters.setBigBlind(bigblind);
+			game.StartGame();
+			//after that we will reach finally block
 			
 		} 
 		catch (NumberFormatException e) {

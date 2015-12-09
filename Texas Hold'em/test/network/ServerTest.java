@@ -42,7 +42,7 @@ public class ServerTest {
 			PokerServer.main(args);
 		} catch (Exception e) {fail("No exceptions should be thrown at this point");}
 		
-		args = new String[5];
+		args = new String[6];
 		
 		try {
 			PokerServer.main(args);
@@ -51,9 +51,11 @@ public class ServerTest {
 	
 	@Test (expected = NumberFormatException.class)
 	public void incorrectPlayerFormatTest() throws Exception{
-		String[] args = new String[2];
+		String[] args = new String[4];
 		args[0] = "abc";
 		args[1] = Integer.toString(100);
+		args[2] = Integer.toString(10);
+		args[3] = Integer.toString(20);
 		
 		try {
 			PokerServer.main(args);
@@ -63,9 +65,11 @@ public class ServerTest {
 	
 	@Test (expected = NumberFormatException.class)
 	public void incorrectCashFormatTest() throws Exception{
-		String[] args = new String[2];
+		String[] args = new String[4];
 		args[0] = Integer.toString(4);
 		args[1] = "100b";
+		args[2] = Integer.toString(10);
+		args[3] = Integer.toString(20);
 		
 		try {
 			PokerServer.main(args);
@@ -75,9 +79,32 @@ public class ServerTest {
 	
 	@Test
 	public void incompatibleDataTest() throws Exception{
-		String[] args = new String[2];
+		String[] args = new String[4];
 		args[0] = Integer.toString(1);
+		args[1] = Integer.toString(100);
+		args[2] = Integer.toString(10);
+		args[3] = Integer.toString(20);
+		
+		PokerServer.main(args);
+		
+		args[0] = Integer.toString(3);
 		args[1] = Integer.toString(0);
+		args[2] = Integer.toString(10);
+		args[3] = Integer.toString(20);
+		
+		PokerServer.main(args);
+		
+		args[0] = Integer.toString(3);
+		args[1] = Integer.toString(100);
+		args[2] = Integer.toString(0);
+		args[3] = Integer.toString(20);
+		
+		PokerServer.main(args);
+		
+		args[0] = Integer.toString(3);
+		args[1] = Integer.toString(100);
+		args[2] = Integer.toString(10);
+		args[3] = Integer.toString(0);
 		
 		PokerServer.main(args);
 	}
