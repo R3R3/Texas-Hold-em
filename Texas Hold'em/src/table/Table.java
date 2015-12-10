@@ -20,23 +20,28 @@ public class Table {
 		players = new Player[num_Players];
 	}
 	
-	public void setNextDealer() {
+	public int setNextDealer() {
+		
 		for(int i=0;i<num_Players;i++){
 			if(players[i].isDealer){
 				players[i].isDealer = false;
 				if(i+1 == num_Players){
 					players[0].isDealer = true;
+					return 0;
 				} else {
 					players[i+1].isDealer = true;
+					return i+1;
 				}
-				break;
 			}
 		}
+		return -1;
 	}
 	
-	public void getRandomDealer() {
+	public int getRandomDealer() {
 		Random random = new Random();
-		players[random.nextInt(num_Players)].isDealer = true;
+		int i;
+		players[i = random.nextInt(num_Players)].isDealer = true;
+		return i;
 	}
 	
 	private void prepareDeck(DeckBuilder builder){

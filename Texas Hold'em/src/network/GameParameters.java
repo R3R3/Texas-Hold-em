@@ -7,7 +7,34 @@ public class GameParameters {
 	private int round=0;
 	private int SmallBlind;
 	private int BigBlind;
+	private int actualDealer;
+	private int actualSB;
+	private int actualBB;
 	
+	public int getActualDealer() {
+		return actualDealer;
+	}
+
+	public void setActualDealer(int actualDealer) {
+		this.actualDealer = actualDealer;
+	}
+
+	public int getActualSB() {
+		return actualSB;
+	}
+
+	public void setActualSB(int actualSB) {
+		this.actualSB = actualSB;
+	}
+
+	public int getActualBB() {
+		return actualBB;
+	}
+
+	public void setActualBB(int actualBB) {
+		this.actualBB = actualBB;
+	}
+
 	public int getSmallBlind() {
 		return SmallBlind;
 	}

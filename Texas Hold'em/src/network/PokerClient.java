@@ -215,6 +215,12 @@ public class PokerClient {
 					setBasecash(basecash);
 					frame.pack();
 				}
+				else if (response.startsWith("ACTIVE")) {
+					setActive();
+				}
+				else if (response.startsWith("INACTIVE")) {
+					setInactive();
+				}
 			}
 		}
 		finally {
@@ -275,6 +281,22 @@ public class PokerClient {
 		}
 		
 		board.add(view, BorderLayout.CENTER);
+	}
+	
+	public void setActive(){
+		for(JButton b : buttons){
+			b.setEnabled(true);
+		}
+		raiseText.setEnabled(true);
+		betText.setEnabled(true);
+	}
+	
+	public void setInactive(){
+		for(JButton b : buttons){
+			b.setEnabled(false);
+		}
+		raiseText.setEnabled(false);
+		betText.setEnabled(false);
 	}
 	
 	public static void main(String[] args) throws Exception {

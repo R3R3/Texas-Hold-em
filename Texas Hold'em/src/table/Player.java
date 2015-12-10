@@ -18,8 +18,17 @@ public class Player extends Thread{
     private PrintWriter output;
     //nie wiem czy siê przyda ale póki co jest. Player wie o istnieniu innych, a na swoim miejscu znajduje nulla.
     public Player[] opponents;
+    private PlayerState state;
 
     
+	public PlayerState getPlayerState() {
+		return state;
+	}
+
+	public void setPlayerState(PlayerState state) {
+		this.state = state;
+	}
+
 	public boolean isDealer = false;
 	
 	Player (int coins, int ID, Socket socket) 

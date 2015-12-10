@@ -54,11 +54,12 @@ public class Game {
 	private void round() {
 		parameters.setRound();
 		if(parameters.getRound() == 1){
-			table.getRandomDealer();
+			parameters.setActualDealer(table.getRandomDealer());
 		}
 		else{
-			table.setNextDealer();
+			parameters.setActualDealer(table.setNextDealer());
 		}
+		
 		table.give2CardsToPlayers();
 		auction();
 		table.giveTableCards(TableCardsTurns.FLOP);
@@ -84,6 +85,7 @@ public class Game {
 
 	private void auction(){
 		//logika aukcji
+		
 	}
 
 	//probably unused due to new exiting condition
