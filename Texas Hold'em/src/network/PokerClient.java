@@ -89,12 +89,13 @@ public class PokerClient {
 					if(bet <= 0){
 						throw new NumberFormatException();
 					}
+					out.println("BET " + Integer.toString(bet));
+					System.out.println("BET " + Integer.toString(bet));
+
 				} catch (NumberFormatException x) {
 					System.out.println("betText data error");
 				}
 				
-				out.println("BET " + Integer.toString(bet));
-				System.out.println("BET " + Integer.toString(bet));
 				betText.setText("");
 			}
 			}
@@ -120,12 +121,13 @@ public class PokerClient {
 					if(raise <= 0){
 						throw new NumberFormatException();
 					}
+					out.println("RAISE " + Integer.toString(raise));
+					System.out.println("RAISE " + Integer.toString(raise));
+
 				} catch (NumberFormatException x) {
 					System.out.println("raiseText data error");
 				}
 				
-				out.println("RAISE " + Integer.toString(raise));
-				System.out.println("RAISE " + Integer.toString(raise));
 				raiseText.setText("");
 			}
 			}

@@ -11,14 +11,17 @@ import cards.and.stuff.Coins;
 public class Player extends Thread{
 
 	private Socket socket;
-	private Coins coins;
+	public Coins coins;
 	private MyHand myhand;
 	private int ID;
-	private BufferedReader input;
-    private PrintWriter output;
+	public BufferedReader input;
+    public PrintWriter output;
     //nie wiem czy siê przyda ale póki co jest. Player wie o istnieniu innych, a na swoim miejscu znajduje nulla.
     public Player[] opponents;
     private PlayerState state;
+    //aktualna wartoœ zak³adu
+    public Coins actualWage;
+    public boolean isDealer = false;
 
     
 	public PlayerState getPlayerState() {
@@ -28,13 +31,13 @@ public class Player extends Thread{
 	public void setPlayerState(PlayerState state) {
 		this.state = state;
 	}
-
-	public boolean isDealer = false;
 	
 	Player (int coins, int ID, Socket socket) 
 	{
 		this.coins = new Coins(coins);
 		this.ID = ID;
+		actualWage = new Coins();
+		setPlayerState(PlayerState.INACTIVE);
 		myhand = new MyHand();
 		this.socket = socket;
 		try{
@@ -42,6 +45,7 @@ public class Player extends Thread{
 		output = new PrintWriter(socket.getOutputStream(), true);
 		output.println("WELCOME PLAYER " + ID);
 		output.println("MESSAGE Waiting for other players to connect..");
+		output.println("INACTIVE");
 		}
 		catch (IOException e) {
 			System.out.println("Dead Player :(" + e);
@@ -69,6 +73,7 @@ public class Player extends Thread{
 		
 		try {
 			output.println("MESSAGE All players connected");
+			String response = "";
 			try {
 				sleep(500);
 			} catch (InterruptedException e) {}
@@ -80,18 +85,36 @@ public class Player extends Thread{
 			output.println("SETCASH " + Integer.toString(getCoins()));
 			
 			while(true){
-				if (isDealer) {
-					output.println("MESSAGE Your turn !");
+				try {
+					response = input.readLine();
+				} catch (IOException e) {
+					System.out.println("Error while reading input from client");
 				}
+				if (state == PlayerState.ACTIVE) {
+					output.println("MESSAGE Your turn !");
+					if(response.startsWith("BET")){
+						//player pressed bet button
+					}
+					else if(response.startsWith("RAISE")){
+						//pressed raise button
+					}
+					else if(response.startsWith("CALL")) {
+						//pressed call button
+					}
+					else if(response.startsWith("FOLD")){
+						//pressed fold button
+					}
+					else if(response.startsWith("CHECK")){
+						//pressed check button
+					}
+					else if(response.startsWith("ALL-IN")){
+						//pressed all-in button
+					}
+				} 
+				
 			}
 			
-		}
-		/*
-		catch (IOException e) {
-			System.out.println("Dead Player :(" + e);
-		}
-		*/
-		finally {
+		} finally {
 			try{socket.close();} catch(IOException e) {}
 		}
 	}

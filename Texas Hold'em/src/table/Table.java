@@ -11,7 +11,8 @@ public class Table {
 	public TableCards tableCards;
 	public Deck deck;
 	public Player[] players;
-	private int num_Players;
+	public int num_Players;
+	public Coins pot;
 	
 	public Table(int amount){
 		num_Players = amount;
@@ -26,11 +27,22 @@ public class Table {
 			if(players[i].isDealer){
 				players[i].isDealer = false;
 				if(i+1 == num_Players){
-					players[0].isDealer = true;
-					return 0;
+					int j;
+					for (j = 0; j<num_Players;j++){
+						if(players[j].getPlayerState() != PlayerState.QUITED){
+							players[j].isDealer = true;
+							return j;
+						}
+					}
 				} else {
-					players[i+1].isDealer = true;
-					return i+1;
+					int j;
+					for(j = i;j<num_Players;j++){
+						if(players[j+1].getPlayerState() != PlayerState.QUITED){
+							players[j+1].isDealer = true;
+							return j+1;
+						}
+						if(j+1 == num_Players){j=-2;}
+					}
 				}
 			}
 		}
@@ -39,9 +51,14 @@ public class Table {
 	
 	public int getRandomDealer() {
 		Random random = new Random();
-		int i;
-		players[i = random.nextInt(num_Players)].isDealer = true;
-		return i;
+		int i = random.nextInt(num_Players);
+		if(players[i].getPlayerState() != PlayerState.QUITED) {
+			return i;
+		}
+		else {
+			getRandomDealer();
+		}
+		return -1;
 	}
 	
 	private void prepareDeck(DeckBuilder builder){
@@ -114,4 +131,22 @@ public class Table {
 		t.tableCards.giveCardTo(t.tableCards);
 	}
 	*/
+
+	public void notifyAboutCards() {
+		//TODO: send strings about cards to each player
+		
+	}
+
+	public void notifyAboutTable(TableCardsTurns cards ) {
+		// TODO: send strings based on given enum
+		switch(cards){
+			case FLOP:
+				break;
+			case TURN:
+				break;
+			case RIVER:
+				break;
+		}
+		
+	}
 }

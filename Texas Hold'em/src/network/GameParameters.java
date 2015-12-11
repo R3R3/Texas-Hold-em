@@ -11,6 +11,14 @@ public class GameParameters {
 	private int actualSB;
 	private int actualBB;
 	
+	public int getPlayerNum() {
+		return PlayerNum;
+	}
+
+	public void setPlayerNum(int playerNum) {
+		PlayerNum = playerNum;
+	}
+
 	public int getActualDealer() {
 		return actualDealer;
 	}
