@@ -21,6 +21,10 @@ public class Coins {
 		coins+=i;
 	}
 	
+	public void reset(){
+		coins = 0;
+	}
+	
 	public int amount(){
 		return coins;
 	}
