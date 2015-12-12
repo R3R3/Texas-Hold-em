@@ -122,18 +122,15 @@ public class Table {
 		}
 		return winners;
 	}
-	/*
-	public static void main(String[] args){
-		Table t = new Table();
-		t.prepareDeck(new StandardDeckBuilder());
-		t.prepareTableCards();
-		t.deck.giveCardTo(t.tableCards);
-		t.tableCards.giveCardTo(t.tableCards);
-	}
-	*/
 
 	public void notifyAboutCards() {
 		//TODO: send strings about cards to each player
+		int i=0;
+		while (i<2){
+			for(Player p : players){
+				p.output.println("HAND");
+			}
+		}
 		
 	}
 
@@ -146,6 +143,14 @@ public class Table {
 				break;
 			case RIVER:
 				break;
+		}
+		
+	}
+
+	public void updatePot() {
+		for(Player p : players){
+			p.pot = pot.amount();
+			p.output.println("POT " + Integer.toString(pot.amount()) );
 		}
 		
 	}

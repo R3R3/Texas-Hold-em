@@ -2,8 +2,6 @@ package network;
 
 import java.util.ArrayList;
 
-import javax.sql.rowset.CachedRowSet;
-
 import cards.and.stuff.NotEnoughCoins;
 import table.Player;
 import table.PlayerState;
@@ -21,6 +19,7 @@ public class Game {
 	public Game(Table table) {
 		this.table = table;
 		parameters.setPlayerNum(table.num_Players);
+		//blinds are set before start, by the server
 	}
 	
 	
@@ -30,14 +29,12 @@ public class Game {
 			round();
 			int players_with_coins=0;
 			for(Player p : table.players){
-				if(p.getCoins() > 0 && p.getPlayerState() != PlayerState.QUITED){
+				if(p.getCoins() > parameters.getBigBlind() && p.getPlayerState() != PlayerState.QUITED){
 					players_with_coins++;
 				}
 			}
-			if(players_with_coins==1){break;};
+			if(players_with_coins < 2){break;};
 		}
-		
-		
 	}
 	
 	/*
@@ -64,19 +61,26 @@ public class Game {
 		else{
 			parameters.setActualDealer(table.setNextDealer());
 		}
+		//dispatching blinds. may be impossible to do when sb can't afford to
+		try{
 		setBlinds();
+		}
+		catch(NotEnoughCoins e) {
+			return;
+		}
+		table.updatePot();
 		table.give2CardsToPlayers();
 		table.notifyAboutCards(); //to implement
-		auction();
+		auction(true);
 		table.giveTableCards(TableCardsTurns.FLOP);
 		table.notifyAboutTable(TableCardsTurns.FLOP); //to implement
-		auction();
+		auction(false);
 		table.giveTableCards(TableCardsTurns.TURN);
 		table.notifyAboutTable(TableCardsTurns.TURN);
-		auction();
+		auction(false);
 		table.giveTableCards(TableCardsTurns.RIVER);
 		table.notifyAboutTable(TableCardsTurns.RIVER);
-		auction();
+		auction(false);
 		ArrayList<Player> winners = new ArrayList<Player>();
 		winners = table.findWinner();
 		sendMoney(winners);
@@ -86,44 +90,61 @@ public class Game {
 	private void sendMoney(ArrayList<Player> winners) throws NotEnoughCoins {
 		if(winners.size() == 1){
 			table.pot.giveCoinsTo(winners.get(0).coins, table.pot.amount());
+			winners.get(0).output.println("MESSAGE You Win");
 		}
 		else{
 			int amount = table.pot.amount();
 			for(Player p : winners){
 				if(table.pot.amount() % winners.size() == 0){
 					table.pot.giveCoinsTo(p.coins, amount/winners.size());
+					p.output.println("MESSAGE You Win");
 				}
 				else {
 					int reszta = table.pot.amount() % winners.size();
 					amount -= reszta;
 					table.pot.giveCoinsTo(p.coins, amount/winners.size());
+					p.output.println("MESSAGE You Win");
 					table.pot.reset();
 				}
 			}
 		}
 	}
 
-	private void auction(){
-		//logika aukcji
-		int i = parameters.getActualSB() + 1;
+	private void auction(boolean isFirst){
+		//logika aukcji isFirst definiuje pierwsz¹ licytacjê -> inna osoba zaczyna licytacjê
+		int i;
+		if(isFirst){
+			i = parameters.getActualBB() + 1;
+		}
+		else {
+			i = parameters.getActualSB();
+		}
 		while (true) {
 			if(i == parameters.getPlayerNum()){i=0;}
+			if(table.players[i].getPlayerState() == PlayerState.FOLDED 
+					|| table.players[i].getPlayerState() == PlayerState.QUITED){continue;}
 			table.players[i].setPlayerState(PlayerState.ACTIVE);
 			table.players[i].output.println("ACTIVE");
 			while (table.players[i].getPlayerState() == PlayerState.ACTIVE){
-			//waiting for and action which will change the state of a player	
+			//waiting for an action which will change the state of a player	
 			}
-			
-			
+			table.updatePot();
+			i++;
 		}
 	}
 	
-	private void setBlinds(){
+	private void setBlinds() throws NotEnoughCoins{
 		int i;
 		for(i=parameters.getActualDealer();true;++i){
 			if(i== parameters.getPlayerNum()){i=0;}
 			if(table.players[i].getPlayerState() != PlayerState.QUITED){
+				if(table.players[i].getCoins() < parameters.getSmallBlind()) {
+					table.players[i].setPlayerState(PlayerState.QUITED);
+					table.players[i].output.println("MESSAGE You lost: Not enough money to give SmallBlind");
+					continue;
+				}
 				parameters.setActualSB(i);
+				table.players[i].coins.giveCoinsTo(table.pot, parameters.getSmallBlind());
 				break;
 			}
 		}
@@ -131,7 +152,13 @@ public class Game {
 		for(i=parameters.getActualSB();true;++i){
 			if(i==parameters.getPlayerNum()){i=0;}
 			if(table.players[i].getPlayerState() != PlayerState.QUITED){
+				if(table.players[i].getCoins() < parameters.getBigBlind()) {
+					table.players[i].setPlayerState(PlayerState.QUITED);
+					table.players[i].output.println("MESSAGE You lost: Not enough money to give BigBlind");
+					continue;
+				}
 				parameters.setActualBB(i);
+				table.players[i].coins.giveCoinsTo(table.pot, parameters.getBigBlind());
 				break;
 			}
 		}

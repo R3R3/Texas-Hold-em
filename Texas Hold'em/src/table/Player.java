@@ -21,8 +21,11 @@ public class Player extends Thread{
     private PlayerState state;
     //aktualna wartoœ zak³adu
     public Coins actualWage;
+    public int pot;
+    public int highestBet;
     public boolean isDealer = false;
-
+    public boolean isAll_in = false;
+    
     
 	public PlayerState getPlayerState() {
 		return state;
@@ -94,21 +97,41 @@ public class Player extends Thread{
 					output.println("MESSAGE Your turn !");
 					if(response.startsWith("BET")){
 						//player pressed bet button
+						raise();
+						
+						
+						state = PlayerState.INACTIVE;
 					}
 					else if(response.startsWith("RAISE")){
 						//pressed raise button
+						raise();
+						
+						
+						state = PlayerState.INACTIVE;
 					}
 					else if(response.startsWith("CALL")) {
 						//pressed call button
+						call();
+						
+						
+						state = PlayerState.INACTIVE;
 					}
 					else if(response.startsWith("FOLD")){
 						//pressed fold button
+						//just becomes out of game for a moment, like suspended
+						state = PlayerState.FOLDED;
 					}
 					else if(response.startsWith("CHECK")){
 						//pressed check button
+						//none game-changing action
+						state = PlayerState.INACTIVE;
 					}
 					else if(response.startsWith("ALL-IN")){
-						//pressed all-in button
+						//pressed all-in button and shit
+						isAll_in = true;
+						
+						
+						state = PlayerState.INACTIVE;
 					}
 				} 
 				
@@ -117,5 +140,15 @@ public class Player extends Thread{
 		} finally {
 			try{socket.close();} catch(IOException e) {}
 		}
+	}
+
+	private void raise() {
+		// TODO: call to even the highest bet and then raise for amount
+		
+	}
+
+	private void call() {
+		// TODO: even up the highest bet
+		
 	}
 }

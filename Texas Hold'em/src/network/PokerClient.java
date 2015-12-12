@@ -22,7 +22,7 @@ import javax.swing.JTextField;
 /*
 
 Client-Server relation is based on sending and receiving specified commands. 
-Commands are represented as string. First part is the type of an actionm, second - optional - represents argument.
+Commands are represented as string. First part is the type of an action, second - optional - represents argument.
 Not every command needs an argument
 Possible commands that can be sent:
 
@@ -48,6 +48,7 @@ public class PokerClient {
     private BufferedReader in;
     private PrintWriter out;
     private int MyID;
+    public int pot;
     
     private JFrame frame = new JFrame("Texas Hold'em !");
     private JLabel messageLabel = new JLabel("");
@@ -219,9 +220,14 @@ public class PokerClient {
 				}
 				else if (response.startsWith("ACTIVE")) {
 					setActive();
+					
 				}
 				else if (response.startsWith("INACTIVE")) {
 					setInactive();
+				}
+				else if (response.startsWith("POT")) {
+					int actual = Integer.parseInt(response.substring(4));
+					updatePot(actual);
 				}
 			}
 		}
@@ -291,6 +297,11 @@ public class PokerClient {
 		}
 		raiseText.setEnabled(true);
 		betText.setEnabled(true);
+	}
+	
+	public void updatePot(int pot){
+		String base = "Pot: ";
+		Pot.setText(base + Integer.toString(pot));
 	}
 	
 	public void setInactive(){
