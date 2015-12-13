@@ -55,12 +55,14 @@ public class Game {
 	 */
 	private void round() throws NotEnoughCoins {
 		parameters.setRound();
+		resetBoard();
 		if(parameters.getRound() == 1){
 			parameters.setActualDealer(table.getRandomDealer());
 		}
 		else{
 			parameters.setActualDealer(table.setNextDealer());
 		}
+		table.notifyDealer(parameters.getActualDealer());
 		//dispatching blinds. may be impossible to do when sb is too poor
 		try{
 		setBlinds();
@@ -86,6 +88,15 @@ public class Game {
 		//reveal cards if at least 2 players are still in the game (not folded) 
 	}
 	
+	private void resetBoard() {
+		// TODO: kasowanie wage/kart
+		table.resetTableCards();
+		table.resetDeck();
+		table.sendReset();
+		
+	}
+
+
 	private void sendMoney(ArrayList<Player> winners) throws NotEnoughCoins {
 		if(winners.size() == 1){
 			table.pot.giveCoinsTo(winners.get(0).coins, table.pot.amount());
@@ -118,8 +129,10 @@ public class Game {
 		else {
 			i = parameters.getActualSB();
 		}
-		while (true) {
+		boolean we_play = true;
+		while (we_play) {
 			if(i == parameters.getPlayerNum()){i=0;}
+			//petla z breakiem while'a
 			if(table.players[i].getPlayerState() == PlayerState.FOLDED 
 					|| table.players[i].getPlayerState() == PlayerState.QUITED){continue;}
 			table.players[i].setPlayerState(PlayerState.ACTIVE);

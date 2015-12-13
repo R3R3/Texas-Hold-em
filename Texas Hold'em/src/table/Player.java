@@ -130,7 +130,7 @@ public class Player extends Thread{
 						}
 					}
 					else if(response.startsWith("FOLD")){
-						//pressed fold button
+						//client pressed fold button
 						//just becomes out of game for a moment, like suspended
 						state = PlayerState.FOLDED;
 					}
@@ -175,6 +175,7 @@ public class Player extends Thread{
 		// ró¿nica miêdzy najwy¿szym zak³adem a tym co ja da³em
 		int difference = highestBet - actualWage;
 		actualWage = highestBet;
+		output.println("WAGE " + Integer.toString(actualWage));
 		//mój pot zwiêkszam o róznicê, stó³ dokona przelewu
 		tempPot += difference;
 	}

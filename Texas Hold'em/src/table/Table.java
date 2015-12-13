@@ -126,14 +126,12 @@ public class Table {
 	}
 
 	public void notifyAboutCards() {
-		//TODO: send strings about cards to each player
 		for(Player p : players){
 			p.notyfyAboutCards();
 		}	
 	}
 
 	public void notifyAboutTable(TableCardsTurns cards ) {
-		// TODO: send strings based on given enum
 		switch(cards){
 			case FLOP:
 				for(Player p : players){
@@ -159,15 +157,42 @@ public class Table {
 	public void updatePot(int change) throws NotEnoughCoins {
 		for(int i=0;i<num_Players;i++) {
 			if(i==change){
+				if(players[change].getPlayerState() == PlayerState.FOLDED){
+					updateFolded(change);
+				}
 				int diff = players[change].tempPot - pot.amount();
 				players[change].coins.giveCoinsTo(pot, diff);
+				players[change].output.println("COINS " + Integer.toString(players[change].getCoins()));
 				players[change].highestBet = highest_bet;
 				updateHighestBet();
+				updateOtherPlayers(change);
 			}
 			else{
 				players[i].tempPot = players[change].tempPot;
 			}
 			players[i].output.println("POT " + Integer.toString(players[change].tempPot));
+		}
+		
+	}
+
+	private void updateFolded(int change) {
+		
+		for(Player p : players){
+			p.output.println("FOLD " + Integer.toString(change));
+		}
+		
+	}
+
+	private void updateOtherPlayers(int change) {
+		
+		for(Player p : players){
+			if(p.getID() == change){
+				continue;
+			}
+			else {
+				p.output.println("OP_CASH " + Integer.toString(change) + " " + Integer.toString(players[change].getCoins()));
+				p.output.println("OP_WAGE" + Integer.toString(change) + " " + Integer.toString(players[change].actualWage));
+			}
 		}
 		
 	}
@@ -178,5 +203,33 @@ public class Table {
 			p.output.println("POT " + Integer.toString(pot.amount()));
 		}
 		
+	}
+
+	public void notifyDealer(int actualDealer) {
+		for(Player p : players) {
+			p.output.println("DEALER " + Integer.toString(actualDealer));
+		}
+		
+	}
+
+	public void resetDeck() {
+		deck.reset();
+		prepareDeck(new StandardDeckBuilder());
+	}
+
+	public void resetTableCards() {
+		tableCards.reset();
+		prepareTableCards();
+	}
+
+	public void sendReset() {
+		for(Player p:players){
+			p.output.println("RESET");
+			if(p.getPlayerState() != PlayerState.QUITED){
+				p.setPlayerState(PlayerState.INACTIVE);
+				p.output.println("INACTIVE");
+				p.isAll_in = false;
+			}
+		}
 	}
 }

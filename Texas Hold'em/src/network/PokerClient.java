@@ -87,8 +87,15 @@ public class PokerClient {
 				int bet =0;
 				try {
 					bet = Integer.parseInt(betText.getText());
-					if(bet <= 0){
+					if(bet <= 0 || bet > Integer.parseInt(activeResults[MyID][2].getText())){
 						throw new NumberFormatException();
+					}
+					if(bet == Integer.parseInt(activeResults[MyID][2].getText())){
+						//bet with all money == all-in
+						out.println("ALL-IN " );
+						System.out.println("ALL-IN (from bet)" );
+						betText.setText("");
+						return;
 					}
 					out.println("BET " + Integer.toString(bet));
 					System.out.println("BET " + Integer.toString(bet));
@@ -119,10 +126,10 @@ public class PokerClient {
 				int raise =0;
 				try {
 					raise = Integer.parseInt(raiseText.getText());
-					if(raise <= 0 || raise > Integer.parseInt(activeResults[MyID][3].getText())){
+					if(raise <= 0 || (raise + highestWage() - Integer.parseInt(activeResults[MyID][3].getText())) > Integer.parseInt(activeResults[MyID][2].getText())){
 						throw new NumberFormatException();
 					}
-					if(raise == Integer.parseInt(activeResults[MyID][3].getText())){
+					if(raise == Integer.parseInt(activeResults[MyID][2].getText())){
 						//raise with all money == all-in
 						out.println("ALL-IN " );
 						System.out.println("ALL-IN (from raise)" );
@@ -237,6 +244,35 @@ public class PokerClient {
 					int actual = Integer.parseInt(response.substring(4));
 					updatePot(actual);
 				}
+				else if (response.startsWith("CASH")){
+					int cash = Integer.parseInt(response.substring(5));
+					updateCash(cash);
+				}
+				else if (response.startsWith("WAGE")){
+					int wage = Integer.parseInt(response.substring(5));
+					updateWage(wage);
+				}
+				else if (response.startsWith("OP_CASH")){
+					int i = Integer.parseInt(response.substring(8, 9));
+					int cash = Integer.parseInt(response.substring(10));
+					updateOponentCash(i, cash);
+				}
+				else if (response.startsWith("OP_WAGE")){
+					int i = Integer.parseInt(response.substring(8, 9));
+					int cash = Integer.parseInt(response.substring(10));
+					updateOponentWage(i, cash);
+				}
+				else if (response.startsWith("FOLD")){
+					int i = Integer.parseInt(response.substring(5));
+					updateFold(i);
+				}
+				else if (response.startsWith("DEALER")){
+					int i = Integer.parseInt(response.substring(7));
+					updateDealer(i);
+				}
+				else if (response.startsWith("RESET")){
+					reset();
+				}
 			}
 		}
 		finally {
@@ -246,11 +282,69 @@ public class PokerClient {
 		
 	}
 	
+	private void reset() {
+		for(int i = 0; i< 5; i++ ){
+			tableCards[i].setText(" ");
+		}
+		
+		for(int i = 0;i<activeResults.length;i++){
+			activeResults[i][1].setBackground(Color.GREEN);
+			activeResults[i][3].setText("0");
+			activeResults[i][4].setText(" ");
+			activeResults[i][5].setText(" ");
+		}
+	}
+
+	private void updateDealer(int i) {
+		for(int k=0;k<activeResults.length;k++){
+			if(activeResults[i][0].getText() == "D"){
+				activeResults[i][0].setText("");
+			}
+		}
+		activeResults[i][0].setText("D");
+		frame.pack();
+	}
+
+	private void updateFold(int i) {
+		activeResults[i][1].setBackground(Color.RED);
+		
+	}
+
+	private void updateOponentWage(int i, int cash) {
+		activeResults[i][3].setText(Integer.toString(cash));
+		
+	}
+
+	private void updateOponentCash(int i, int cash) {
+		activeResults[i][2].setText(Integer.toString(cash));
+		
+	}
+
+	private void updateWage(int wage) {
+		activeResults[MyID][3].setText(Integer.toString(wage));
+		
+	}
+
+	private void updateCash(int cash) {
+		activeResults[MyID][2].setText(Integer.toString(cash));
+		
+	}
+
 	private void setBasecash(int basecash) {
 		
 		for(int i=0;i<activeResults.length;i++){
 			activeResults[i][2].setText(Integer.toString(basecash));
 		}
+	}
+	
+	private int highestWage() {
+		int wage = Integer.parseInt(activeResults[0][3].getText());
+		for(int i= 1; i< activeResults.length;i++){
+			if(Integer.parseInt(activeResults[i][3].getText()) > wage){
+				wage = Integer.parseInt(activeResults[i][3].getText());
+			}
+		}
+		return wage;
 	}
 
 	private void setMainBoard(int PN) 
@@ -285,6 +379,7 @@ public class PokerClient {
 				}
 				if(j==1){
 					activeResults[i][j].setText(Integer.toString(i));
+					activeResults[i][j].setBackground(Color.GREEN);
 				}
 				else if( j==3){
 					activeResults[i][j].setText("0");
