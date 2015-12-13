@@ -119,8 +119,15 @@ public class PokerClient {
 				int raise =0;
 				try {
 					raise = Integer.parseInt(raiseText.getText());
-					if(raise <= 0){
+					if(raise <= 0 || raise > Integer.parseInt(activeResults[MyID][3].getText())){
 						throw new NumberFormatException();
+					}
+					if(raise == Integer.parseInt(activeResults[MyID][3].getText())){
+						//raise with all money == all-in
+						out.println("ALL-IN " );
+						System.out.println("ALL-IN (from raise)" );
+						raiseText.setText("");
+						return;
 					}
 					out.println("RAISE " + Integer.toString(raise));
 					System.out.println("RAISE " + Integer.toString(raise));
@@ -148,6 +155,7 @@ public class PokerClient {
 			@Override
 			public void actionPerformed(ActionEvent e) {
 				//when pressed
+				setInactive();
 				out.println("FOLD " );
 				System.out.println("FOLD " );
 			}

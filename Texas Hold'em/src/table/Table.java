@@ -13,6 +13,8 @@ public class Table {
 	public Player[] players;
 	public int num_Players;
 	public Coins pot;
+	public int player_with_highest_bet;
+	public int highest_bet;
 	
 	public Table(int amount){
 		num_Players = amount;
@@ -125,32 +127,55 @@ public class Table {
 
 	public void notifyAboutCards() {
 		//TODO: send strings about cards to each player
-		int i=0;
-		while (i<2){
-			for(Player p : players){
-				p.output.println("HAND");
-			}
-		}
-		
+		for(Player p : players){
+			p.notyfyAboutCards();
+		}	
 	}
 
 	public void notifyAboutTable(TableCardsTurns cards ) {
 		// TODO: send strings based on given enum
 		switch(cards){
 			case FLOP:
+				for(Player p : players){
+					p.output.println("TABLE 0 " + tableCards.getString(0));
+					p.output.println("TABLE 1 " + tableCards.getString(1));
+					p.output.println("TABLE 2 " + tableCards.getString(2));
+				}
 				break;
 			case TURN:
+				for(Player p : players){
+					p.output.println("TABLE 3 " + tableCards.getString(3));
+				}
 				break;
 			case RIVER:
+				for(Player p : players){
+					p.output.println("TABLE 4 " + tableCards.getString(4));
+				}
 				break;
 		}
 		
 	}
 
-	public void updatePot() {
+	public void updatePot(int change) throws NotEnoughCoins {
+		for(int i=0;i<num_Players;i++) {
+			if(i==change){
+				int diff = players[change].tempPot - pot.amount();
+				players[change].coins.giveCoinsTo(pot, diff);
+				players[change].highestBet = highest_bet;
+				updateHighestBet();
+			}
+			else{
+				players[i].tempPot = players[change].tempPot;
+			}
+			players[i].output.println("POT " + Integer.toString(players[change].tempPot));
+		}
+		
+	}
+
+	public void updateHighestBet() {
 		for(Player p : players){
-			p.pot = pot.amount();
-			p.output.println("POT " + Integer.toString(pot.amount()) );
+			p.highestBet = highest_bet;
+			p.output.println("POT " + Integer.toString(pot.amount()));
 		}
 		
 	}

@@ -11,4 +11,8 @@ public class MyHand extends CardContainer {
 		p.getHandCards(cards);
 	}
 	
+	public String getString(int i){
+		return cards.get(i).toString();
+	}
+	
 }

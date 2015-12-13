@@ -19,7 +19,7 @@ public class Game {
 	public Game(Table table) {
 		this.table = table;
 		parameters.setPlayerNum(table.num_Players);
-		//blinds are set before start, by the server
+		//blinds are set before start, by the server	
 	}
 	
 	
@@ -29,7 +29,7 @@ public class Game {
 			round();
 			int players_with_coins=0;
 			for(Player p : table.players){
-				if(p.getCoins() > parameters.getBigBlind() && p.getPlayerState() != PlayerState.QUITED){
+				if(p.getCoins() >= parameters.getBigBlind() && p.getPlayerState() != PlayerState.QUITED){
 					players_with_coins++;
 				}
 			}
@@ -61,14 +61,13 @@ public class Game {
 		else{
 			parameters.setActualDealer(table.setNextDealer());
 		}
-		//dispatching blinds. may be impossible to do when sb can't afford to
+		//dispatching blinds. may be impossible to do when sb is too poor
 		try{
 		setBlinds();
 		}
 		catch(NotEnoughCoins e) {
 			return;
 		}
-		table.updatePot();
 		table.give2CardsToPlayers();
 		table.notifyAboutCards(); //to implement
 		auction(true);
@@ -110,7 +109,7 @@ public class Game {
 		}
 	}
 
-	private void auction(boolean isFirst){
+	private void auction(boolean isFirst) throws NotEnoughCoins{
 		//logika aukcji isFirst definiuje pierwsz¹ licytacjê -> inna osoba zaczyna licytacjê
 		int i;
 		if(isFirst){
@@ -128,7 +127,7 @@ public class Game {
 			while (table.players[i].getPlayerState() == PlayerState.ACTIVE){
 			//waiting for an action which will change the state of a player	
 			}
-			table.updatePot();
+			table.updatePot(i);
 			i++;
 		}
 	}
@@ -144,7 +143,9 @@ public class Game {
 					continue;
 				}
 				parameters.setActualSB(i);
-				table.players[i].coins.giveCoinsTo(table.pot, parameters.getSmallBlind());
+				table.players[i].highestBet = parameters.getSmallBlind();
+				table.players[i].tempPot += parameters.getSmallBlind();
+				table.updatePot(i);
 				break;
 			}
 		}
@@ -158,7 +159,10 @@ public class Game {
 					continue;
 				}
 				parameters.setActualBB(i);
-				table.players[i].coins.giveCoinsTo(table.pot, parameters.getBigBlind());
+				table.players[i].tempPot += parameters.getBigBlind();
+				table.player_with_highest_bet = i;
+				table.highest_bet = parameters.getBigBlind();
+				table.updatePot(i);
 				break;
 			}
 		}

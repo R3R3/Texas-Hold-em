@@ -15,5 +15,9 @@ public class Card {
 	
 	public Color getColor(){
 		return color;
-	}	
+	}
+	
+	public String toString(){
+		return color.toString() + " " + Integer.toString(figure);
+	}
 }

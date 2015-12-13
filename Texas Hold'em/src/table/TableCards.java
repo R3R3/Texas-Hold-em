@@ -11,5 +11,8 @@ public class TableCards extends CardContainer {
 		p.getTableCards(cards);
 	}
 
+	public String getString(int i){
+		return cards.get(i).toString();
+	}
 	
 }

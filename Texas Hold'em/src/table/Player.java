@@ -7,6 +7,7 @@ import java.io.PrintWriter;
 import java.net.Socket;
 
 import cards.and.stuff.Coins;
+import cards.and.stuff.NotEnoughCoins;
 
 public class Player extends Thread{
 
@@ -20,9 +21,11 @@ public class Player extends Thread{
     public Player[] opponents;
     private PlayerState state;
     //aktualna wartoœ zak³adu
-    public Coins actualWage;
-    public int pot;
-    public int highestBet;
+    public int actualWage = 0;
+    //wartoœ pot'a z mojej perspektywy
+    public int tempPot=0;
+    //wysokoœ najwy¿szego zak³adu
+    public int highestBet=0;
     public boolean isDealer = false;
     public boolean isAll_in = false;
     
@@ -39,7 +42,6 @@ public class Player extends Thread{
 	{
 		this.coins = new Coins(coins);
 		this.ID = ID;
-		actualWage = new Coins();
 		setPlayerState(PlayerState.INACTIVE);
 		myhand = new MyHand();
 		this.socket = socket;
@@ -97,24 +99,35 @@ public class Player extends Thread{
 					output.println("MESSAGE Your turn !");
 					if(response.startsWith("BET")){
 						//player pressed bet button
-						raise();
-						
-						
-						state = PlayerState.INACTIVE;
+						try {
+							int amount = Integer.parseInt(response.substring(4));
+							raise(amount);
+							state = PlayerState.INACTIVE;
+						} catch (NotEnoughCoins e) {
+							// TODO Auto-generated catch block
+							e.printStackTrace();
+						}
 					}
 					else if(response.startsWith("RAISE")){
 						//pressed raise button
-						raise();
-						
-						
-						state = PlayerState.INACTIVE;
+						try {
+							int amount = Integer.parseInt(response.substring(6));
+							raise(amount);
+							state = PlayerState.INACTIVE;
+						} catch (NotEnoughCoins e) {
+							// TODO Auto-generated catch block
+							e.printStackTrace();
+						}
 					}
 					else if(response.startsWith("CALL")) {
 						//pressed call button
-						call();
-						
-						
-						state = PlayerState.INACTIVE;
+						try {
+							call();
+							state = PlayerState.INACTIVE;
+						} catch (NotEnoughCoins e) {
+							// TODO Auto-generated catch block
+							e.printStackTrace();
+						}
 					}
 					else if(response.startsWith("FOLD")){
 						//pressed fold button
@@ -129,9 +142,13 @@ public class Player extends Thread{
 					else if(response.startsWith("ALL-IN")){
 						//pressed all-in button and shit
 						isAll_in = true;
-						
-						
-						state = PlayerState.INACTIVE;
+						try {
+							coins.giveCoinsTo(coins, coins.amount());
+							state = PlayerState.INACTIVE;
+						} catch (NotEnoughCoins e) {
+							// TODO Auto-generated catch block
+							e.printStackTrace();
+						}
 					}
 				} 
 				
@@ -142,13 +159,30 @@ public class Player extends Thread{
 		}
 	}
 
-	private void raise() {
+	private void raise(int amount) throws NotEnoughCoins {
 		// TODO: call to even the highest bet and then raise for amount
+		//wyrównuje najpierw jeœli potrzeba
+		call();
+		//zwiêkszam najwiêkszy zak³ad i mój pot o kwotê podbicia
+		highestBet = actualWage + amount;
+		actualWage = highestBet;
+		tempPot += amount;
 		
 	}
 
-	private void call() {
+	private void call() throws NotEnoughCoins {
 		// TODO: even up the highest bet
-		
+		// ró¿nica miêdzy najwy¿szym zak³adem a tym co ja da³em
+		int difference = highestBet - actualWage;
+		actualWage = highestBet;
+		//mój pot zwiêkszam o róznicê, stó³ dokona przelewu
+		tempPot += difference;
 	}
+
+	public void notyfyAboutCards() {
+		// TODO: inform about cards
+		output.println("CARD 0 " + myhand.getString(0));
+		output.println("CARD 1 " + myhand.getString(1));
+	}
+	
 }
