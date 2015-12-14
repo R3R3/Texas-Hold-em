@@ -30,11 +30,11 @@ public class Player extends Thread{
     public boolean isAll_in = false;
     
     
-	public PlayerState getPlayerState() {
+	public synchronized PlayerState getPlayerState() {
 		return state;
 	}
 
-	public void setPlayerState(PlayerState state) {
+	public synchronized void setPlayerState(PlayerState state) {
 		this.state = state;
 	}
 	
@@ -57,19 +57,19 @@ public class Player extends Thread{
 		}
 	}
 	
-	public int getCoins (){
+	public synchronized int getCoins (){
 		return coins.amount();
 	}
 	
-	public int getID(){
+	public synchronized int getID(){
 		return ID;
 	}
 	
-	protected MyHand getHand(){
+	protected synchronized MyHand getHand(){
 		return myhand;
 	}
 	
-	private int getPlayerNum() {
+	private synchronized int getPlayerNum() {
 		return opponents.length;
 	}
 	
@@ -78,23 +78,13 @@ public class Player extends Thread{
 		
 		try {
 			output.println("MESSAGE All players connected");
-			String response = "";
-			try {
-				sleep(500);
-			} catch (InterruptedException e) {}
-			System.out.println("trying to send amount and setcash");
+			System.out.println(ID + " : trying to send amount and setcash");
 			output.println("AMOUNT " + Integer.toString(getPlayerNum()));
-			try {
-				sleep(500);
-			} catch (InterruptedException e) {}
 			output.println("SETCASH " + Integer.toString(getCoins()));
 			
 			while(true){
-				try {
-					response = input.readLine();
-				} catch (IOException e) {
-					System.out.println("Error while reading input from client");
-				}
+					String response = input.readLine();
+				
 				if (state == PlayerState.ACTIVE) {
 					output.println("MESSAGE Your turn !");
 					if(response.startsWith("BET")){
@@ -103,8 +93,8 @@ public class Player extends Thread{
 							int amount = Integer.parseInt(response.substring(4));
 							raise(amount);
 							state = PlayerState.INACTIVE;
+							output.println("INACTIVE");
 						} catch (NotEnoughCoins e) {
-							// TODO Auto-generated catch block
 							e.printStackTrace();
 						}
 					}
@@ -114,8 +104,8 @@ public class Player extends Thread{
 							int amount = Integer.parseInt(response.substring(6));
 							raise(amount);
 							state = PlayerState.INACTIVE;
+							output.println("INACTIVE");
 						} catch (NotEnoughCoins e) {
-							// TODO Auto-generated catch block
 							e.printStackTrace();
 						}
 					}
@@ -124,8 +114,8 @@ public class Player extends Thread{
 						try {
 							call();
 							state = PlayerState.INACTIVE;
+							output.println("INACTIVE");
 						} catch (NotEnoughCoins e) {
-							// TODO Auto-generated catch block
 							e.printStackTrace();
 						}
 					}
@@ -133,11 +123,13 @@ public class Player extends Thread{
 						//client pressed fold button
 						//just becomes out of game for a moment, like suspended
 						state = PlayerState.FOLDED;
+						output.println("INACTIVE");
 					}
 					else if(response.startsWith("CHECK")){
 						//pressed check button
 						//none game-changing action
 						state = PlayerState.INACTIVE;
+						output.println("INACTIVE");
 					}
 					else if(response.startsWith("ALL-IN")){
 						//pressed all-in button and shit
@@ -145,8 +137,8 @@ public class Player extends Thread{
 						try {
 							coins.giveCoinsTo(coins, coins.amount());
 							state = PlayerState.INACTIVE;
+							output.println("INACTIVE");
 						} catch (NotEnoughCoins e) {
-							// TODO Auto-generated catch block
 							e.printStackTrace();
 						}
 					}
@@ -154,34 +146,28 @@ public class Player extends Thread{
 				
 			}
 			
+		} catch (IOException e) {
+			System.out.println("Player " + ID +  " Died: " + e);
 		} finally {
 			try{socket.close();} catch(IOException e) {}
 		}
 	}
 
-	private void raise(int amount) throws NotEnoughCoins {
-		// TODO: call to even the highest bet and then raise for amount
-		//wyrównuje najpierw jeœli potrzeba
+	private synchronized void raise(int amount) throws NotEnoughCoins {
 		call();
-		//zwiêkszam najwiêkszy zak³ad i mój pot o kwotê podbicia
-		highestBet = actualWage + amount;
-		actualWage = highestBet;
+		actualWage += amount;
 		tempPot += amount;
-		
+		highestBet +=amount;
 	}
 
-	private void call() throws NotEnoughCoins {
-		// TODO: even up the highest bet
-		// ró¿nica miêdzy najwy¿szym zak³adem a tym co ja da³em
+	private synchronized void call() throws NotEnoughCoins {
 		int difference = highestBet - actualWage;
-		actualWage = highestBet;
-		output.println("WAGE " + Integer.toString(actualWage));
-		//mój pot zwiêkszam o róznicê, stó³ dokona przelewu
 		tempPot += difference;
+		actualWage = highestBet;
+		//output.println("WAGE " + Integer.toString(actualWage));
 	}
 
-	public void notyfyAboutCards() {
-		// TODO: inform about cards
+	public synchronized void notyfyAboutCards() {
 		output.println("CARD 0 " + myhand.getString(0));
 		output.println("CARD 1 " + myhand.getString(1));
 	}

@@ -21,6 +21,7 @@ public class Table {
 		prepareDeck(new StandardDeckBuilder());
 		prepareTableCards();
 		players = new Player[num_Players];
+		pot = new Coins();
 	}
 	
 	public int setNextDealer() {
@@ -155,15 +156,38 @@ public class Table {
 	}
 
 	public void updatePot(int change) throws NotEnoughCoins {
+		
+		//DALEJ NIE DZIA£A WYŒWIETLANIE
+		
+		if(players[change].getPlayerState() == PlayerState.FOLDED){
+			updateFolded(change);
+		}
+		int diff = players[change].tempPot - pot.amount();
+		players[change].coins.giveCoinsTo(pot, diff);
+		if(players[change].highestBet > highest_bet){
+			highest_bet = players[change].highestBet; 
+			player_with_highest_bet = change;
+		}
+		updateHighestBet();
+		refreshPlayers();
+		
+		
+		
+		//OD NOWA !!!!!!!!!!!!!!!!!!
+		/*
 		for(int i=0;i<num_Players;i++) {
 			if(i==change){
 				if(players[change].getPlayerState() == PlayerState.FOLDED){
 					updateFolded(change);
 				}
-				int diff = players[change].tempPot - pot.amount();
+			//	int diff = players[change].tempPot - pot.amount();
 				players[change].coins.giveCoinsTo(pot, diff);
+				if(players[change].tempPot != pot.amount()){
+					System.out.println("b³¹d w obliczeniach");
+				}
 				players[change].output.println("COINS " + Integer.toString(players[change].getCoins()));
-				players[change].highestBet = highest_bet;
+				highest_bet = players[change].highestBet;
+				if(diff != 0){player_with_highest_bet = change;}
 				updateHighestBet();
 				updateOtherPlayers(change);
 			}
@@ -171,6 +195,27 @@ public class Table {
 				players[i].tempPot = players[change].tempPot;
 			}
 			players[i].output.println("POT " + Integer.toString(players[change].tempPot));
+		}
+		*/
+		
+		
+		
+	}
+
+	private void refreshPlayers() {
+		
+		for(Player p: players){
+			for(int i=0;i<num_Players;i++){
+				if (p.getID() == i){
+					p.output.println("CASH " + Integer.toString(p.coins.amount()));
+					p.output.println("WAGE " + Integer.toString(p.actualWage));
+					p.output.println("POT " + Integer.toString(pot.amount()));
+				} else {
+					p.output.println("OP_CASH " + Integer.toString(i) + " " + Integer.toString(players[i].coins.amount()));
+					p.output.println("OP_WAGE " + Integer.toString(i) + " " + Integer.toString(players[i].actualWage));
+					p.output.println("POT " + Integer.toString(pot.amount()));
+				}
+			}
 		}
 		
 	}
@@ -191,7 +236,7 @@ public class Table {
 			}
 			else {
 				p.output.println("OP_CASH " + Integer.toString(change) + " " + Integer.toString(players[change].getCoins()));
-				p.output.println("OP_WAGE" + Integer.toString(change) + " " + Integer.toString(players[change].actualWage));
+				p.output.println("OP_WAGE " + Integer.toString(change) + " " + Integer.toString(players[change].actualWage));
 			}
 		}
 		
@@ -200,7 +245,7 @@ public class Table {
 	public void updateHighestBet() {
 		for(Player p : players){
 			p.highestBet = highest_bet;
-			p.output.println("POT " + Integer.toString(pot.amount()));
+			//p.output.println("POT " + Integer.toString(pot.amount()));
 		}
 		
 	}

@@ -7,7 +7,6 @@ import java.awt.GridLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.BufferedReader;
-import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.PrintWriter;
 import java.net.Socket;
@@ -261,7 +260,7 @@ public class PokerClient {
 					int i = Integer.parseInt(response.substring(8, 9));
 					int cash = Integer.parseInt(response.substring(10));
 					updateOponentWage(i, cash);
-				}
+				} 
 				else if (response.startsWith("FOLD")){
 					int i = Integer.parseInt(response.substring(5));
 					updateFold(i);
@@ -272,6 +271,14 @@ public class PokerClient {
 				}
 				else if (response.startsWith("RESET")){
 					reset();
+				}
+				else if (response.startsWith("TABLE")){
+					tableCards[Integer.parseInt(response.substring(6,7))].setText(response.substring(8));
+					frame.pack();
+				}
+				else if (response.startsWith("CARD")){
+					activeResults[MyID][4+Integer.parseInt(response.substring(5,6))].setText(response.substring(7));
+					frame.pack();
 				}
 			}
 		}

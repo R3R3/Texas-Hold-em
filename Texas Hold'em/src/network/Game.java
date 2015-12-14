@@ -132,58 +132,82 @@ public class Game {
 		boolean we_play = true;
 		while (we_play) {
 			if(i == parameters.getPlayerNum()){i=0;}
-			//petla z breakiem while'a
 			if(table.players[i].getPlayerState() == PlayerState.FOLDED 
-					|| table.players[i].getPlayerState() == PlayerState.QUITED){continue;}
+					|| table.players[i].getPlayerState() == PlayerState.QUITED
+					|| table.players[i].isAll_in){continue;}
 			table.players[i].setPlayerState(PlayerState.ACTIVE);
 			table.players[i].output.println("ACTIVE");
 			while (table.players[i].getPlayerState() == PlayerState.ACTIVE){
 			//waiting for an action which will change the state of a player	
 			}
 			table.updatePot(i);
+			if(endAuction(i)){
+				we_play = false;
+			}
 			i++;
 		}
 	}
 	
 	private void setBlinds() throws NotEnoughCoins{
-		int i;
-		for(i=parameters.getActualDealer();true;++i){
+		int i = parameters.getActualDealer();
+		
+		while(true){
+			i++;
 			if(i== parameters.getPlayerNum()){i=0;}
 			if(table.players[i].getPlayerState() != PlayerState.QUITED){
+				
 				if(table.players[i].getCoins() < parameters.getSmallBlind()) {
 					table.players[i].setPlayerState(PlayerState.QUITED);
 					table.players[i].output.println("MESSAGE You lost: Not enough money to give SmallBlind");
 					continue;
 				}
+			
 				parameters.setActualSB(i);
-				table.players[i].highestBet = parameters.getSmallBlind();
+				table.players[i].actualWage = parameters.getSmallBlind();
 				table.players[i].tempPot += parameters.getSmallBlind();
+				table.players[i].highestBet += parameters.getSmallBlind();
 				table.updatePot(i);
 				break;
 			}
 		}
 		
-		for(i=parameters.getActualSB();true;++i){
-			if(i==parameters.getPlayerNum()){i=0;}
+		i = parameters.getActualSB();
+		while(true){
+			i++;
+			if(i== parameters.getPlayerNum()){i=0;}
 			if(table.players[i].getPlayerState() != PlayerState.QUITED){
+				
 				if(table.players[i].getCoins() < parameters.getBigBlind()) {
 					table.players[i].setPlayerState(PlayerState.QUITED);
 					table.players[i].output.println("MESSAGE You lost: Not enough money to give BigBlind");
 					continue;
 				}
+				
 				parameters.setActualBB(i);
+				table.players[i].actualWage = parameters.getBigBlind();
 				table.players[i].tempPot += parameters.getBigBlind();
+				table.players[i].highestBet += parameters.getBigBlind();
 				table.player_with_highest_bet = i;
-				table.highest_bet = parameters.getBigBlind();
 				table.updatePot(i);
 				break;
 			}
 		}
 	}
 
-	//probably unused due to new exiting condition
-	private void EndGame() {
-		isFinished = true;
+	private boolean endAuction(int actual) {
+		
+		int wage = table.highest_bet;
+		
+		for(int i = 0; i< parameters.getPlayerNum();i++){
+			if(table.players[i].actualWage < wage && !table.players[i].isAll_in){
+				return false;
+			}
+		}
+		if(table.players[actual].actualWage == wage && actual == table.player_with_highest_bet){
+			return false;
+		}
+		
+		return true;
 	}
 	
 }
