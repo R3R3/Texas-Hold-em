@@ -35,15 +35,53 @@ public class PokerPattern {
 			}
 			i = (i!=-5)?map.lowerKey(i):map.lastKey();
 			
-			if(c != 5 &&
-				map.get(12).contains(color) &&
-				map.get(0).contains(color) &&
-				map.get(1).contains(color) &&
-				map.get(2).contains(color) &&
-				map.get(3).contains(color) )
+			
+			if(c != 5)
 			{
-				c=5;
-				i=3;
+				boolean [] p = {false,false,false,false,false};
+				boolean str = true;
+				for(Integer in : map.keySet())
+				{
+					switch(in.intValue()){
+						case 12:{						
+							if(map.get(12).contains(color))
+								p[0]= true;
+							break;
+						}
+						case 0:{						
+							if(map.get(0).contains(color))
+								p[1]= true;
+							break;
+						}
+						case 1:{						
+							if(map.get(1).contains(color))
+								p[2]= true;
+							break;
+						}
+						case 2:{						
+							if(map.get(2).contains(color))
+								p[3]= true;
+							break;
+						}
+						case 3: {						
+							if(map.get(3).contains(color))
+								p[4]= true;
+							break;
+						}
+						default:
+							break;
+					}
+						
+				}
+				for(boolean b : p){
+					if(!b)
+						str = false;
+				}
+				
+				if(str){
+					c=5;
+					i=3;	
+				}
 			}
 			
 			return (c==5)?i:-1;

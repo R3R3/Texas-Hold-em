@@ -23,7 +23,7 @@ public class High {
 	
 	public static int[] getHigh(TreeMap<Integer,ArrayList<Color>> map,Color color){
 		int []t = new int [map.keySet().size()+1];
-		t[0]=4;
+		t[0]=5;
 		int i = 20;
 		i = (map.lowerKey(i)!=null)?map.lowerKey(i).intValue():-1;
 		int j= 1;

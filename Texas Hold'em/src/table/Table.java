@@ -110,19 +110,24 @@ public class Table {
 	
 	public ArrayList<Player> findWinner(){
 		int[]t = new int []{-1};
+		int [][] result = new int [players.length][];
 		ArrayList<Player> winners = new ArrayList<Player>();
 		CheckPatterns.setTableCards(tableCards);
 		int i = 0;
+		int j = 0;
 		for (Player p : players){
 			try {
-				i = CheckPatterns.check(getResult(p), t);
+				result[j] = getResult(p);
+				i = CheckPatterns.check(result[j], t);
 			} catch (TableNotSend e) {}
 			if(i==1){
 				winners=new ArrayList<Player>();
+				t = result[j];
 				winners.add(p);
 			}else if(i==0){
 				winners.add(p);
-			}		
+			}
+			j++;
 		}
 		return winners;
 	}

@@ -13,9 +13,12 @@ public abstract class CardContainer {
 		this.cards = (LinkedList<Card>) cards;
 	}*/
 	
-	public void giveCardTo(CardContainer con){
+	public boolean giveCardTo(CardContainer con){
+		if(cards.isEmpty())
+			return false;
 		Card card = cards.removeFirst();
 		con.addCard(card);
+		return true;
 	}
 	
 	private void addCard(Card card){
