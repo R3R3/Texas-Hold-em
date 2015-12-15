@@ -9,8 +9,6 @@ import table.Table;
 
 public class PokerServer {
 	
-	PokerServer(){}
-	
 	static int TIMEOUT = 10;
 
 	public static void main(String[] args) throws Exception 
