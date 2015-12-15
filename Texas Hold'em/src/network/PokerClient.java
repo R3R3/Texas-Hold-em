@@ -44,8 +44,8 @@ public class PokerClient {
 	
 	private static int PORT = 1234;
 	private Socket socket;
-    private BufferedReader in;
-    private PrintWriter out;
+    protected BufferedReader in;
+    protected PrintWriter out;
     private int MyID;
     public int pot;
     
@@ -206,7 +206,7 @@ public class PokerClient {
 		frame.getContentPane().add(boardPanel, "Center");
 		frame.pack();
 	}
-
+	
 	public void play() throws Exception{
 		String response;
 		try{

@@ -71,16 +71,20 @@ public class Game {
 			return;
 		}
 		table.give2CardsToPlayers();
-		table.notifyAboutCards(); //to implement
+		table.notifyAboutCards();
+		table.setAllNotMoved();
 		auction(true);
 		table.giveTableCards(TableCardsTurns.FLOP);
-		table.notifyAboutTable(TableCardsTurns.FLOP); //to implement
+		table.notifyAboutTable(TableCardsTurns.FLOP); 
+		table.setAllNotMoved();
 		auction(false);
 		table.giveTableCards(TableCardsTurns.TURN);
 		table.notifyAboutTable(TableCardsTurns.TURN);
+		table.setAllNotMoved();
 		auction(false);
 		table.giveTableCards(TableCardsTurns.RIVER);
 		table.notifyAboutTable(TableCardsTurns.RIVER);
+		table.setAllNotMoved();
 		auction(false);
 		ArrayList<Player> winners = new ArrayList<Player>();
 		winners = table.findWinner();

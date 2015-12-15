@@ -28,6 +28,7 @@ public class Player extends Thread{
     public int highestBet=0;
     public boolean isDealer = false;
     public boolean isAll_in = false;
+    public boolean madeMove = false;
     
     
 	public synchronized PlayerState getPlayerState() {
@@ -164,7 +165,6 @@ public class Player extends Thread{
 		int difference = highestBet - actualWage;
 		tempPot += difference;
 		actualWage = highestBet;
-		//output.println("WAGE " + Integer.toString(actualWage));
 	}
 
 	public synchronized void notyfyAboutCards() {

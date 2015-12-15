@@ -49,8 +49,7 @@ public class ClientTest {
 		
 		client.reset();
 		assertEquals(" ", client.tableCards[0].getText());
-		assertEquals("0", client.activeResults[0][3].getText());
-		
+		assertEquals("0", client.activeResults[0][3].getText());		
 	
 	}
 }
