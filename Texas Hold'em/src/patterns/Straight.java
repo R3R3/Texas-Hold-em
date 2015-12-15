@@ -28,21 +28,23 @@ public class Straight {
 		tab[2].intValue() == 2 &&
 		tab[3].intValue() == 3
 		)
-		max=3;
+		{
+			max=3;
+		}
 
-		int c = 0;
+		int c = 1;
 		int i = size-1;
-		for(int j = size-1; j>1 && c!= 4;j--){
+		for(int j = size-1; j>0 && c!= 5;j--){
 			if(tab[j].intValue()-1 != tab[j-1].intValue()){
 				i = j-1;
-				c=0;
+				c=1;
 			}
 			else{
 				c++;
 			}
 		}
 		
-		if(c==4)
+		if(c==5)
 			max = tab[i].intValue();
 		return max;
 	}

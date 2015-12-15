@@ -23,14 +23,14 @@ public class Evaluator {
 		if (t!= null)
 			if(t[0] == 6)
 				return t;
-		//Straight
-		v=Straight.ifIs(map);
-		if(v!=-1)
-			return new int []{5,v};
 		//Color
 		Color color = ColorPattern.ifSame(map);
 		if(color!=null)
 			return High.getHigh(map, color);
+		//Straight
+		v=Straight.ifIs(map);
+		if(v!=-1)
+			return new int []{4,v};
 		//Three of a kind
 		if(t!=null)
 			return t;

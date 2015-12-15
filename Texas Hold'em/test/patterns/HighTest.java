@@ -33,7 +33,7 @@ public class HighTest {
 		TreeMap<Integer,ArrayList<Color>> map;
 		map = MapMaker.getMulti(genList());
 		int [] t = High.getHigh(map,Color.DIAMOND);
-		assertEquals(t[0],4);	
+		assertEquals(t[0],5);	
 		assertEquals(t[1],12);
 		assertEquals(t[2],10);
 		assertEquals(t[3],7);
@@ -46,7 +46,7 @@ public class HighTest {
 		TreeMap<Integer,ArrayList<Color>> map;
 		map = MapMaker.getMulti(genList());
 		int [] t = High.getHigh(map,Color.DIAMOND);
-		assertEquals(t[0],4);	
+		assertEquals(t[0],5);	
 		assertEquals(t[1],12);
 		assertEquals(t[2],10);
 		assertEquals(t[3],7);

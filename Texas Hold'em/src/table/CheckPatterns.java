@@ -12,7 +12,7 @@ import patterns.MapMaker;
 
 public class CheckPatterns {
 
-	private static CardContainer tablecards;
+	private static TableCards tablecards;
 	private LinkedList<Card> hand;
 	private LinkedList<Card> table;
 	private LinkedList<Card> all;
@@ -21,6 +21,7 @@ public class CheckPatterns {
 		if(tablecards==null)
 			throw new TableNotSend();
 		hand.sendToCheck(this);
+		tablecards.sendToCheck(this);
 	}
 	
 	public static void setTableCards(TableCards tableCards){
@@ -36,8 +37,12 @@ public class CheckPatterns {
 	
 	private void merge(){
 		all = new LinkedList<Card>();
-		all.addAll(table);
-		all.addAll(hand);
+		for(Card c : table){
+			all.add(c);
+		}
+		for(Card c : hand){
+			all.add(c);
+		}
 	}
 	
 	public static int[] getResult(MyHand hand) throws TableNotSend{
