@@ -49,17 +49,17 @@ public class PokerClient {
     private int MyID;
     public int pot;
     
-    private JFrame frame = new JFrame("Texas Hold'em !");
-    private JLabel messageLabel = new JLabel("");
-    private JLabel Pot = new JLabel("Pot: ");
+    protected JFrame frame = new JFrame("Texas Hold'em !");
+    protected JLabel messageLabel = new JLabel("");
+    protected JLabel Pot = new JLabel("Pot: ");
     //0-Bet, 1-Raise, 2-Check, 3-Call, 4-Fold, 5-All-in
-    private JButton[] buttons = new JButton[6];
-    private JLabel[] players;
-    private JTextField betText = new JTextField(5);
-    private JTextField raiseText = new JTextField(5);
-    private JPanel board = new JPanel(new BorderLayout( 20, 20));
-    private JLabel[] tableCards = new JLabel[5];
-    private JLabel[][] activeResults;
+    protected JButton[] buttons = new JButton[6];
+    protected JLabel[] players;
+    protected JTextField betText = new JTextField(5);
+    protected JTextField raiseText = new JTextField(5);
+    protected JPanel board = new JPanel(new BorderLayout( 20, 20));
+    protected JLabel[] tableCards = new JLabel[5];
+    protected JLabel[][] activeResults;
 	
 	public PokerClient(String ServerAddress) throws Exception { 
 		socket = new Socket(ServerAddress, PORT);
@@ -289,7 +289,7 @@ public class PokerClient {
 		
 	}
 	
-	private void reset() {
+	protected void reset() {
 		for(int i = 0; i< 5; i++ ){
 			tableCards[i].setText(" ");
 		}
@@ -302,7 +302,7 @@ public class PokerClient {
 		}
 	}
 
-	private void updateDealer(int i) {
+	protected void updateDealer(int i) {
 		for(int k=0;k<activeResults.length;k++){
 			if(activeResults[i][0].getText() == "D"){
 				activeResults[i][0].setText("");
@@ -312,39 +312,39 @@ public class PokerClient {
 		frame.pack();
 	}
 
-	private void updateFold(int i) {
+	protected void updateFold(int i) {
 		activeResults[i][1].setBackground(Color.RED);
 		
 	}
 
-	private void updateOponentWage(int i, int cash) {
+	protected void updateOponentWage(int i, int cash) {
 		activeResults[i][3].setText(Integer.toString(cash));
 		
 	}
 
-	private void updateOponentCash(int i, int cash) {
+	protected void updateOponentCash(int i, int cash) {
 		activeResults[i][2].setText(Integer.toString(cash));
 		
 	}
 
-	private void updateWage(int wage) {
+	protected void updateWage(int wage) {
 		activeResults[MyID][3].setText(Integer.toString(wage));
 		
 	}
 
-	private void updateCash(int cash) {
+	protected void updateCash(int cash) {
 		activeResults[MyID][2].setText(Integer.toString(cash));
 		
 	}
 
-	private void setBasecash(int basecash) {
+	protected void setBasecash(int basecash) {
 		
 		for(int i=0;i<activeResults.length;i++){
 			activeResults[i][2].setText(Integer.toString(basecash));
 		}
 	}
 	
-	private int highestWage() {
+	protected int highestWage() {
 		int wage = Integer.parseInt(activeResults[0][3].getText());
 		for(int i= 1; i< activeResults.length;i++){
 			if(Integer.parseInt(activeResults[i][3].getText()) > wage){
@@ -354,7 +354,7 @@ public class PokerClient {
 		return wage;
 	}
 
-	private void setMainBoard(int PN) 
+	protected void setMainBoard(int PN) 
 	{
 		
 		JPanel cards = new JPanel();
