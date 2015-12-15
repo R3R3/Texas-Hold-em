@@ -2,6 +2,7 @@ package table;
 
 import static org.junit.Assert.*;
 
+import java.net.ServerSocket;
 import java.net.Socket;
 import java.util.ArrayList;
 
@@ -9,14 +10,13 @@ import org.junit.Before;
 import org.junit.Ignore;
 import org.junit.Test;
 
-import cards.and.stuff.CardContainer;
-
 public class TableTest {
 
 	Table t;
 	
 	@Before
-	public void createTable(){
+	public void createTable() throws Exception{
+		
 		t = new Table(4);
 		try {
 			for(int i=0;i<4;i++){
@@ -44,17 +44,23 @@ public class TableTest {
 	
 	@Test
 	public void dealerTest(){
-		t.getRandomDealer();
-		boolean testdealer = false;
-		int i;
-		for(i = 0; i< t.players.length;i++){
-			if(t.players[i].isDealer){ testdealer = true; break;}
-		}
 		
-		assertTrue(testdealer);
+		int i = t.getRandomDealer();
+		
+		assertTrue(t.players[i].isDealer);
 		
 		for(i=0;i<t.players.length;i++){
 			t.players[i].isDealer = false;
+			if(i!=0){t.players[i].setPlayerState(PlayerState.QUITED);}
+		}
+		
+		i = t.getRandomDealer();
+		
+		assertTrue(t.players[i].isDealer);
+		
+		for(i=0;i<t.players.length;i++){
+			t.players[i].isDealer = false;
+			t.players[i].setPlayerState(PlayerState.INACTIVE);
 		}
 		
 		t.players[1].isDealer = true;
@@ -76,28 +82,28 @@ public class TableTest {
 		for(int i=0;i<t.players.length;i++){
 			assertNotNull(t.players[i].getHand());
 			
-			//TODO: iloœc kart?
+			assertNotEquals(" ",t.players[i].getHand().getString(0));
+			assertNotEquals(" ",t.players[i].getHand().getString(1));
 		}
 		
 	}
 	
-	@Ignore
 	@Test
 	public void setTableCardsTest() {
 		
-		//TODO: patrzenie na karty/iloœc?
 		t.giveTableCards(TableCardsTurns.FLOP);
-		
+		assertNotEquals(" ",t.tableCards.getString(0));
+		assertNotEquals(" ",t.tableCards.getString(1));
+		assertNotEquals(" ",t.tableCards.getString(2));
 		t.giveTableCards(TableCardsTurns.TURN);
-		
+		assertNotEquals(" ",t.tableCards.getString(3));
 		t.giveTableCards(TableCardsTurns.RIVER);
+		assertNotEquals(" ",t.tableCards.getString(4));
 	}
 	
 	@Ignore
 	@Test
 	public void resultTest(){
-		
-		int[] testResult = null;
 		
 		t.give2CardsToPlayers();
 		
@@ -105,16 +111,42 @@ public class TableTest {
 		t.giveTableCards(TableCardsTurns.TURN);
 		t.giveTableCards(TableCardsTurns.RIVER);
 		
-		try {
-			testResult = t.getResult(t.players[0]);
-		} catch (TableNotSend e) {}
-		
-		assertNotNull(testResult);
-		assertTrue((testResult.length > 0) ? true : false);
-		
 		ArrayList<Player> winners = new ArrayList<Player>();
 		winners = t.findWinner();
 		assertFalse(winners.isEmpty());
 		
+	}
+	
+	@Test
+	public void resetTest(){
+		
+		t.resetDeck();
+		
+		t.giveTableCards(TableCardsTurns.FLOP);
+		
+		String test = t.tableCards.getString(0);
+		t.resetTableCards();
+		t.deck.giveCardTo(t.tableCards);
+		String test2;
+		try{
+		test2 = t.tableCards.getString(0);
+		} catch (IndexOutOfBoundsException e){test2 = " ";}
+		assertNotEquals(test2,test);
+	
+	}
+	
+	@Ignore
+	@Test
+	public void signalTest(){
+		t.give2CardsToPlayers();
+		t.giveTableCards(TableCardsTurns.FLOP);
+		t.giveTableCards(TableCardsTurns.TURN);
+		t.giveTableCards(TableCardsTurns.RIVER);
+		
+		t.notifyAboutCards();
+		t.notifyAboutTable(TableCardsTurns.FLOP);
+		t.notifyAboutTable(TableCardsTurns.RIVER);
+		t.notifyAboutTable(TableCardsTurns.TURN);
+		t.notifyDealer(3);
 	}
 }
