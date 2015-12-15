@@ -54,14 +54,15 @@ public class Table {
 	
 	public int getRandomDealer() {
 		Random random = new Random();
-		int i = random.nextInt(num_Players);
-		if(players[i].getPlayerState() != PlayerState.QUITED) {
-			return i;
+		int i;
+		while (true){
+			i = random.nextInt(num_Players);
+			if(players[i].getPlayerState() != PlayerState.QUITED) {
+				players[i].isDealer = true;
+				break;
+			}
 		}
-		else {
-			getRandomDealer();
-		}
-		return -1;
+		return i;
 	}
 	
 	private void prepareDeck(DeckBuilder builder){
