@@ -10,6 +10,8 @@ import org.junit.Before;
 import org.junit.Ignore;
 import org.junit.Test;
 
+import cards.and.stuff.MyDeckBuilder;
+
 public class TableTest {
 
 	Table t;
@@ -101,10 +103,14 @@ public class TableTest {
 		assertNotEquals(" ",t.tableCards.getString(4));
 	}
 	
-	@Ignore
 	@Test
-	public void resultTest(){
-		
+	public void oneWinnerTest(){
+		t.deck = new MyDeckBuilder().getDeck(new String[]{
+						"6H",
+						"0C","9C","JC","5D","6S",
+						"6C","QC","2C","QH",
+						"5H","KC","3C","KH"
+						});
 		t.give2CardsToPlayers();
 		
 		t.giveTableCards(TableCardsTurns.FLOP);
@@ -113,7 +119,27 @@ public class TableTest {
 		
 		ArrayList<Player> winners = new ArrayList<Player>();
 		winners = t.findWinner();
-		assertFalse(winners.isEmpty());
+		assertEquals(winners.get(0),t.players[2]);
+		
+	}
+	
+	@Test
+	public void moreWinnersTest(){
+		t.deck = new MyDeckBuilder().getDeck(new String[]{
+						"6H",
+						"0C","9C","JC","5D","6S",
+						"QS","QD","2D","QH",
+						"KS","KD","3H","KH"
+						});
+		t.give2CardsToPlayers();
+		
+		t.giveTableCards(TableCardsTurns.FLOP);
+		t.giveTableCards(TableCardsTurns.TURN);
+		t.giveTableCards(TableCardsTurns.RIVER);
+		
+		ArrayList<Player> winners = new ArrayList<Player>();
+		winners = t.findWinner();
+		assertTrue(winners.size()==3);
 		
 	}
 	

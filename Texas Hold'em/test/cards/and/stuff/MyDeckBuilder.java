@@ -27,7 +27,7 @@ public class MyDeckBuilder implements DeckBuilder{
 	@Override
 	public void resetDeck(){
 	}
-	private static final String f = "23456789JQKA";
+	private static final String f = "234567890JQKA";
 	
 	private static Color getColor(String s){
 		switch(s){

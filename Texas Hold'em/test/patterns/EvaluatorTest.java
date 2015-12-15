@@ -35,7 +35,7 @@ public class EvaluatorTest {
 		int t [];
 		map = getMap(new String[]{"3S","JC","JS","6S","JH","5H","JD"});
 		t = Evaluator.value(map);
-		assertTrue(t[0]==7 && t[1] == 8 && t[2] == 4);
+		assertTrue(t[0]==7 && t[1] == 9 && t[2] == 4);
 	}
 	
 	@Test
@@ -53,7 +53,7 @@ public class EvaluatorTest {
 		int t [];
 		map = getMap(new String[]{"3S","4S","KS","6S","7S","5H","QS"});
 		t = Evaluator.value(map);
-		assertTrue(t[0]==5 && t[1] == 10 && t[2] == 9 && t[3] == 5
+		assertTrue(t[0]==5 && t[1] == 11 && t[2] == 10 && t[3] == 5
 				&& t[4] == 4 && t[5] == 2);
 	}
 	
@@ -73,7 +73,7 @@ public class EvaluatorTest {
 		int t [];
 		map = getMap(new String[]{"3S","4S","5D","5C","7S","5H","QS"});
 		t = Evaluator.value(map);
-		assertTrue(t[0]==3 && t[1] == 3 && t[2] == 9 && t[3] == 5);
+		assertTrue(t[0]==3 && t[1] == 3 && t[2] == 10 && t[3] == 5);
 	}
 	
 	@Test
@@ -82,7 +82,7 @@ public class EvaluatorTest {
 		int t [];
 		map = getMap(new String[]{"3S","4S","5D","6S","4C","5H","QS"});
 		t = Evaluator.value(map);
-		assertTrue(t[0]==2 && t[1] == 3 && t[2] == 2 && t[3] == 9);
+		assertTrue(t[0]==2 && t[1] == 3 && t[2] == 2 && t[3] == 10);
 	}
 	
 	@Test
@@ -91,7 +91,7 @@ public class EvaluatorTest {
 		int t [];
 		map = getMap(new String[]{"3S","4C","9C","6C","5D","5H","QS"});
 		t = Evaluator.value(map);
-		assertTrue(t[0]==1 && t[1] == 3 && t[2] == 9 && t[3] == 7 && t[4] == 4);
+		assertTrue(t[0]==1 && t[1] == 3 && t[2] == 10 && t[3] == 7 && t[4] == 4);
 	}
 
 }

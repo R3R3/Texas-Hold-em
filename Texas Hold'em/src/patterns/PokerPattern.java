@@ -46,22 +46,27 @@ public class PokerPattern {
 						case 12:{						
 							if(map.get(12).contains(color))
 								p[0]= true;
+							break;
 						}
 						case 0:{						
 							if(map.get(0).contains(color))
 								p[1]= true;
+							break;
 						}
 						case 1:{						
 							if(map.get(1).contains(color))
 								p[2]= true;
+							break;
 						}
 						case 2:{						
 							if(map.get(2).contains(color))
 								p[3]= true;
+							break;
 						}
 						case 3: {						
 							if(map.get(3).contains(color))
 								p[4]= true;
+							break;
 						}
 						default:
 							break;
