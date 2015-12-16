@@ -1,6 +1,7 @@
 package network;
 
 import java.util.ArrayList;
+import java.util.TreeMap;
 
 import cards.and.stuff.NotEnoughCoins;
 import table.Player;
@@ -86,9 +87,8 @@ public class Game {
 		table.notifyAboutTable(TableCardsTurns.RIVER);
 		table.setAllNotMoved();
 		auction(false);
-		ArrayList<Player> winners = new ArrayList<Player>();
-		winners = table.findWinner();
-		sendMoney(winners);
+		findWinners();
+		table.pot.reset();
 		//reveal cards if at least 2 players are still in the game (not folded) 
 	}
 	
@@ -101,24 +101,63 @@ public class Game {
 	}
 
 
-	private void sendMoney(ArrayList<Player> winners) throws NotEnoughCoins {
+	private void findWinners() throws NotEnoughCoins {
+		TreeMap<Integer,ArrayList<Player>> map = new TreeMap<Integer,ArrayList<Player>> ();
+		ArrayList<Player> tmp;
+		int coins;
+		int wage = -1;
+		int prevKey = 0;
+		for(Player p : table.players){
+			wage = p.actualWage;
+			if(p.isAll_in || wage == table.highest_bet)
+			{
+				for(Integer i: map.keySet()){
+					if(i.intValue()<=wage){
+						map.get(i).add(p);
+					}
+				}	
+			}
+		}
+		wage = map.higherKey(wage);
+		while(wage != -1){
+			coins = 0;
+			for(Player p : table.players){
+				int dif = wage - prevKey;
+				if(p.actualWage >= dif){
+					coins+=dif;
+					p.actualWage-=dif;
+				}
+				else
+				{
+					coins+=p.actualWage;
+					p.actualWage = 0;
+				}
+			}
+			table.canWinPlayers = map.get(wage);
+			tmp = table.findWinner();
+			sendMoney(tmp,coins);
+			prevKey = wage;
+			wage = map.higherKey(wage);
+		}
+	}
+	
+	private void sendMoney(ArrayList<Player> winners, int pot) throws NotEnoughCoins{
 		if(winners.size() == 1){
-			table.pot.giveCoinsTo(winners.get(0).coins, table.pot.amount());
+			table.pot.giveCoinsTo(winners.get(0).coins, pot);
 			winners.get(0).output.println("MESSAGE You Win");
 		}
 		else{
-			int amount = table.pot.amount();
+			int amount = pot;
 			for(Player p : winners){
-				if(table.pot.amount() % winners.size() == 0){
+				if(pot % winners.size() == 0){
 					table.pot.giveCoinsTo(p.coins, amount/winners.size());
 					p.output.println("MESSAGE You Win");
 				}
 				else {
-					int reszta = table.pot.amount() % winners.size();
+					int reszta = pot % winners.size();
 					amount -= reszta;
 					table.pot.giveCoinsTo(p.coins, amount/winners.size());
 					p.output.println("MESSAGE You Win");
-					table.pot.reset();
 				}
 			}
 		}

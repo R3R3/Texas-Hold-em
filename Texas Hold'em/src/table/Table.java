@@ -11,6 +11,7 @@ public class Table {
 	public TableCards tableCards;
 	public Deck deck;
 	public Player[] players;
+	public ArrayList<Player> canWinPlayers;
 	public int num_Players;
 	public Coins pot;
 	public int player_with_highest_bet;
@@ -110,12 +111,12 @@ public class Table {
 	
 	public ArrayList<Player> findWinner(){
 		int[]t = new int []{-1};
-		int [][] result = new int [players.length][];
+		int [][] result = new int [canWinPlayers.size()][];
 		ArrayList<Player> winners = new ArrayList<Player>();
 		CheckPatterns.setTableCards(tableCards);
 		int i = 0;
 		int j = 0;
-		for (Player p : players){
+		for (Player p : canWinPlayers){
 			try {
 				result[j] = getResult(p);
 				i = CheckPatterns.check(result[j], t);
@@ -198,11 +199,14 @@ public class Table {
 	}
 
 	private void updateFolded(int change) {
-		
+		Player f = null;
 		for(Player p : players){
 			p.output.println("FOLD " + Integer.toString(change));
+			if(p.getID()==change){
+				f = p;
+			}
 		}
-		
+		canWinPlayers.remove(f);	
 	}
 
 	public void updateHighestBet() {
@@ -231,12 +235,14 @@ public class Table {
 	}
 
 	public void sendReset() {
+		canWinPlayers = new ArrayList<Player> ();
 		for(Player p:players){
 			p.output.println("RESET");
 			if(p.getPlayerState() != PlayerState.QUITED){
 				p.setPlayerState(PlayerState.INACTIVE);
 				p.output.println("INACTIVE");
 				p.isAll_in = false;
+				canWinPlayers.add(p);				
 			}
 		}
 	}

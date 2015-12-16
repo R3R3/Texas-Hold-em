@@ -161,7 +161,6 @@ public class TableTest {
 	
 	}
 	
-	@Ignore
 	@Test
 	public void signalTest(){
 		t.give2CardsToPlayers();

@@ -5,7 +5,6 @@ import java.util.LinkedList;
 import java.util.TreeMap;
 
 import cards.and.stuff.Card;
-import cards.and.stuff.CardContainer;
 import cards.and.stuff.Color;
 import patterns.Evaluator;
 import patterns.MapMaker;
@@ -16,7 +15,6 @@ public class CheckPatterns {
 	private LinkedList<Card> hand;
 	private LinkedList<Card> table;
 	private LinkedList<Card> all;
-	private ArrayList<Card> allA;
 	
 	private CheckPatterns(MyHand hand) throws TableNotSend{
 		if(tablecards==null)
