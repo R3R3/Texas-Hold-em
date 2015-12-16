@@ -2,30 +2,21 @@ package network;
 
 import java.io.IOException;
 import java.net.ServerSocket;
-import java.net.SocketTimeoutException;
-
-import table.Player;
+import java.net.SocketException;
+import table.PlayerException;
 import table.Table;
 
 public class PokerServer {
 	
-	static int TIMEOUT = 10;
-
-	public static void main(String[] args) throws Exception 
-	{
-		
-		ServerSocket socket;
-		try {
-			socket = getSocket(1234);
-		} catch (ServerNotCreated e) {
-			return;
-		}
-		System.out.println("Server is running");
-		int amount, basecash, smallblind, bigblind;
-		GameMode mode;
+	int amount, basecash, smallblind, bigblind;
+	GameMode mode;
+	int TIMEOUT = 10;
+	ServerSocket socket = null;
+	
+	PokerServer(String[] args){
 		
 		try{
-			if(args.length < 4 || args.length > 5){System.out.println("args error");return;}
+			if(args.length < 4 || args.length > 5){System.out.println("args error");throw new NumberFormatException("args error");}
 			
 			amount = Integer.parseInt(args[0]);
 			basecash = Integer.parseInt(args[1]);
@@ -34,7 +25,7 @@ public class PokerServer {
 			
 			if(amount < 2 || amount > 11 || smallblind <= 0 || bigblind < smallblind || basecash <= 0 + bigblind){
 			System.out.println("incompatible data");
-			return;	
+			throw new NumberFormatException("incompatible data");
 			}
 			
 			try {
@@ -42,64 +33,85 @@ public class PokerServer {
 			}
 			catch(ArrayIndexOutOfBoundsException e){
 				// not given -> setting default
+				System.out.println("Setting default mode");
 				mode = GameMode.setDefault();
 			}
-			Table t = new Table(amount);
 			
-			socket.setSoTimeout(1000*TIMEOUT);
-			for(int i=0;i<amount;i++){
-				System.out.println("Waiting for player " + i);
-				try {
-					t.createPlayers(i, basecash,socket.accept());
-				} catch(SocketTimeoutException e) {
-					System.out.println("Accept: Timeout !!!");
-					//TODO: Here comes bot player replacing timeouted client 
-				}
-			}
-			System.out.println("Setting opponents");
-			for(int i=0;i<amount;i++){
-				t.players[i].opponents = new Player[amount];
-				for(int k=0;k<amount;k++){
-					if(i==k){t.players[i].opponents[i] = null; continue;}
-					t.players[i].opponents[k] = t.players[k];
-				}
-			}
-			
-			
-			System.out.println("Running threads");
-			for(int i=0;i<amount;i++){
-				t.players[i].start();	
-			}
-			
-			//game needs only our table and chosen mode plus wages
-			Game game = new Game(t);
-			game.parameters.setMode(mode);
-			game.parameters.setSmallBlind(smallblind);
-			game.parameters.setBigBlind(bigblind);
-			game.StartGame();
-			//after that we will reach finally block
-			
-		} 
-		catch (NumberFormatException e) {
+		} catch (NumberFormatException e) {
 			System.out.println("data error");
-			throw new NumberFormatException("data error");
+			throw new NumberFormatException(e.getMessage());
+		}
+	}
+
+	public static void main(String[] args) throws Exception
+	{		
+		PokerServer server = null;
+		try {
+			server = new PokerServer(args);
+			server.getSocket(1234);
+			Table t = server.getTable();
+			server.connectPlayers(server.getSocket(1234), t.num_Players, t);
+			Game g = server.getGame(t);
+			
+			g.StartGame();
 		} finally {
-			finalize(socket);
+			server.finalize(server.getSocket(1234));
+		}
+	}
+
+	protected void connectPlayers(ServerSocket socket, int amount, Table t) throws SocketException{
+		socket.setSoTimeout(1000*TIMEOUT);
+		for(int i=0;i<amount;i++){
+			System.out.println("Waiting for player " + i);
+			try {
+				t.createPlayers(i, basecash,socket.accept());
+			} catch(PlayerException | IOException e) {
+				System.out.println("Accept: Timeout !!!");
+				//TODO: Here comes bot player replacing timeouted client 
+			} 
+		}
+		
+		System.out.println("Running threads");
+		for(int i=0;i<amount;i++){
+			t.players[i].start();	
 		}
 	}
 	
-	protected static ServerSocket getSocket(int PORT) throws ServerNotCreated {
+	protected Table getTable(){
+		return new Table(amount);
+	}
+	
+	protected Game getGame(Table t){
+		Game game = new Game(t);
+		game.parameters.setMode(mode);
+		game.parameters.setSmallBlind(smallblind);
+		game.parameters.setBigBlind(bigblind);
+		return game;
+	}
+	
+	protected synchronized ServerSocket getSocket(int PORT) throws ServerNotCreated {
 		try {
-			return new ServerSocket(PORT);
+			if(socket == null){
+				ServerSocket serv = new ServerSocket(PORT);
+				System.out.println("Server is running");
+				setSocket(serv);
+			}
+			return socket;
 		} catch (IOException e) {
 			throw new ServerNotCreated(e.getMessage());
 		}
 	}
 
-	protected static void finalize(ServerSocket socket){
-		System.out.println("Closing server socket");
+	private void setSocket(ServerSocket serv) {
+		this.socket = serv;
+		
+	}
+
+	protected void finalize(ServerSocket socket){
+		System.out.print("Closing server socket...");
 		try {
 			socket.close();
+			System.out.print("closed\n");
 		} catch (IOException e) {
 			System.out.println(e.getMessage());
 		}
