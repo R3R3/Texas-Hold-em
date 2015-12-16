@@ -101,12 +101,27 @@ public class Game {
 	}
 
 
-	private void findWinners() throws NotEnoughCoins {
+	public void findWinners() throws NotEnoughCoins {
 		TreeMap<Integer,ArrayList<Player>> map = new TreeMap<Integer,ArrayList<Player>> ();
 		ArrayList<Player> tmp;
 		int coins;
 		int wage = -1;
 		int prevKey = 0;
+		for(Player p : table.players){
+			wage = p.actualWage;
+			if(p.isAll_in || wage == table.highest_bet)
+			{
+				boolean isIn = false;
+				for(Integer in : map.keySet()){
+					if(in.intValue() == wage){
+						isIn= true;
+					}
+				}
+				if (!isIn){
+					map.put(new Integer(wage), new ArrayList<Player>());
+				}
+			}
+		}
 		for(Player p : table.players){
 			wage = p.actualWage;
 			if(p.isAll_in || wage == table.highest_bet)
@@ -118,7 +133,7 @@ public class Game {
 				}	
 			}
 		}
-		wage = map.higherKey(wage);
+		wage = map.firstKey().intValue();
 		while(wage != -1){
 			coins = 0;
 			for(Player p : table.players){
@@ -137,27 +152,42 @@ public class Game {
 			tmp = table.findWinner();
 			sendMoney(tmp,coins);
 			prevKey = wage;
-			wage = map.higherKey(wage);
+			wage = map.higherKey(wage)!=null?map.higherKey(wage):-1;
 		}
 	}
 	
 	private void sendMoney(ArrayList<Player> winners, int pot) throws NotEnoughCoins{
 		if(winners.size() == 1){
 			table.pot.giveCoinsTo(winners.get(0).coins, pot);
-			winners.get(0).output.println("MESSAGE You Win");
+			try{
+				winners.get(0).output.println("MESSAGE You Win");
+			}
+			catch(NullPointerException e){
+				System.out.println(winners.get(0).getID()+ " won "+ pot);
+			}
 		}
 		else{
 			int amount = pot;
 			for(Player p : winners){
 				if(pot % winners.size() == 0){
 					table.pot.giveCoinsTo(p.coins, amount/winners.size());
-					p.output.println("MESSAGE You Win");
+					try{
+						p.output.println("MESSAGE You Win");
+					}
+					catch(NullPointerException e){
+						System.out.println(p.getID()+ " won "+ amount/winners.size());
+					}
 				}
 				else {
 					int reszta = pot % winners.size();
 					amount -= reszta;
 					table.pot.giveCoinsTo(p.coins, amount/winners.size());
-					p.output.println("MESSAGE You Win");
+					try{
+						p.output.println("MESSAGE You Win");
+					}
+					catch(NullPointerException e){
+						System.out.println(p.getID()+ " won "+ amount/winners.size());
+					}
 				}
 			}
 		}
