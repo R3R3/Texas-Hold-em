@@ -31,11 +31,11 @@ public class Player extends Thread{
     public boolean madeMove = false;
     
     
-	public synchronized PlayerState getPlayerState() {
+	public PlayerState getPlayerState() {
 		return state;
 	}
 
-	public synchronized void setPlayerState(PlayerState state) {
+	public void setPlayerState(PlayerState state) {
 		this.state = state;
 	}
 	
@@ -58,19 +58,19 @@ public class Player extends Thread{
 		}
 	}
 	
-	public synchronized int getCoins (){
+	public int getCoins (){
 		return coins.amount();
 	}
 	
-	public synchronized int getID(){
+	public int getID(){
 		return ID;
 	}
 	
-	protected synchronized MyHand getHand(){
+	protected MyHand getHand(){
 		return myhand;
 	}
 	
-	private synchronized int getPlayerNum() {
+	private int getPlayerNum() {
 		return opponents.length;
 	}
 	
@@ -154,20 +154,20 @@ public class Player extends Thread{
 		}
 	}
 
-	private synchronized void raise(int amount) throws NotEnoughCoins {
+	protected synchronized void raise(int amount) throws NotEnoughCoins {
 		call();
 		actualWage += amount;
 		tempPot += amount;
 		highestBet +=amount;
 	}
 
-	private synchronized void call() throws NotEnoughCoins {
+	protected synchronized void call() throws NotEnoughCoins {
 		int difference = highestBet - actualWage;
 		tempPot += difference;
 		actualWage = highestBet;
 	}
 
-	public synchronized void notyfyAboutCards() {
+	protected void notyfyAboutCards() {
 		output.println("CARD 0 " + myhand.getString(0));
 		output.println("CARD 1 " + myhand.getString(1));
 	}
