@@ -14,7 +14,8 @@ public class PlayerTest {
 	Player player;
 	
 	@Before
-	public void createPlayer(){
+	public void createPlayer() throws Exception{
+		
 		player = new Player(100,0,new Socket());
 		player.actualWage = 20;
 		player.highestBet = 40;

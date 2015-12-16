@@ -68,6 +68,27 @@ public class ServerTest {
 		assertTrue(server.getSocket(669).isClosed());
 	}
 	
+	@Test
+	public void trollimitTest() throws Exception{
+		PokerServer server = null;
+		String[] args = new String[5];
+		args[0] = "4";
+		args[1] = "120";
+		args[2] = "11";
+		args[3] = "22";
+		args[4] = "TROLLIMIT";
+		
+		server = new PokerServer(args);
+		server.getSocket(669);
+		Table t = server.getTable();
+		//server.connectPlayers(server.getSocket(669), t.num_Players, t);
+		
+		Game g = server.getGame(t);
+		assertEquals(GameMode.NOLIMIT,g.parameters.getMode());
+		
+		server.finalize(server.getSocket(669));
+	}
+	
 	@Test (expected = NumberFormatException.class)
 	public void toofewargumentsTest() throws NumberFormatException{
 		@SuppressWarnings("unused")

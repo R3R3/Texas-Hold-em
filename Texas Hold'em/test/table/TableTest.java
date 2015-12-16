@@ -2,25 +2,34 @@ package table;
 
 import static org.junit.Assert.*;
 
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.net.ServerSocket;
 import java.net.Socket;
 import java.util.ArrayList;
 
+import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 
 import cards.and.stuff.MyDeckBuilder;
+import cards.and.stuff.NotEnoughCoins;
 
 public class TableTest {
 
 	Table t;
+	ServerSocket serv;
+	BufferedReader input;
 	
 	@Before
 	public void createTable() throws Exception{
 		
+		serv = new ServerSocket(0);
+		
 		t = new Table(4);
 		try {
 			for(int i=0;i<4;i++){
-				t.createPlayers(i, 100, new Socket());
+				t.createPlayers(i, 100, new Socket("localhost", serv.getLocalPort()));
 			}
 		} catch (PlayerException e) {}
 		
@@ -160,7 +169,10 @@ public class TableTest {
 	}
 	
 	@Test
-	public void signalTest(){
+	public void signalTest() throws IOException{
+		
+		t.sendReset();
+		assertNotNull(t.canWinPlayers);
 		t.give2CardsToPlayers();
 		t.giveTableCards(TableCardsTurns.FLOP);
 		t.giveTableCards(TableCardsTurns.TURN);
@@ -171,5 +183,41 @@ public class TableTest {
 		t.notifyAboutTable(TableCardsTurns.RIVER);
 		t.notifyAboutTable(TableCardsTurns.TURN);
 		t.notifyDealer(3);
+		
+		t.revealCards(0);
+	}
+	
+	@Test
+	public void HaltTest(){
+		t.players[1].madeMove = true;
+		assertTrue(t.players[1].madeMove);
+		t.setAllNotMoved();
+		assertFalse(t.players[1].madeMove);
+	}
+	
+	@Test
+	public void updatehighestbetTest(){
+		t.highest_bet = 100;
+		t.updateHighestBet();
+		assertEquals(100,t.players[1].highestBet);
+	}
+	
+	@Test
+	public void updatepotTest() throws NotEnoughCoins{
+		t.players[0].actualWage = 10;
+		t.players[0].highestBet = 10;
+		t.players[0].tempPot = 10;
+		
+		t.updatePot(0);
+		assertEquals(10,t.players[3].highestBet);
+		assertEquals(10,t.players[2].tempPot);
+	}
+	
+	@After
+	public void cleanUp() throws IOException{
+		for(Player p : t.players){
+			p.socket.close();
+		}
+		serv.close();
 	}
 }
