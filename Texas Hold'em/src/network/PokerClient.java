@@ -280,6 +280,12 @@ public class PokerClient {
 					activeResults[MyID][4+Integer.parseInt(response.substring(5,6))].setText(response.substring(7));
 					frame.pack();
 				}
+				else if (response.startsWith("OP_CARD")){
+					int id = Integer.parseInt(response.substring(11, 12));
+					int i = Integer.parseInt(response.substring(9, 10));
+					activeResults[id][4 + i].setText(response.substring(11));
+					frame.pack();
+				}
 			}
 		}
 		finally {

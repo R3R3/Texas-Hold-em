@@ -88,12 +88,32 @@ public class Game {
 		table.setAllNotMoved();
 		auction(false);
 		findWinners();
+		revealCards();
 		table.pot.reset();
-		//reveal cards if at least 2 players are still in the game (not folded) 
 	}
 	
-	private void resetBoard() {
-		// TODO: kasowanie wage/kart
+	protected void revealCards() {
+		int interested_players=0;
+		for(Player p : table.players){
+			if(p.getPlayerState() != PlayerState.FOLDED && p.getPlayerState() != PlayerState.QUITED){
+				interested_players++;
+			}
+		}
+		if(interested_players < 2){
+			return;
+		}
+		else {
+			for(Player p : table.players){
+				if(p.getPlayerState() != PlayerState.FOLDED && p.getPlayerState() != PlayerState.QUITED){
+					table.revealCards(p.getID());
+				}
+			}
+		}
+		
+	}
+
+
+	protected void resetBoard() {
 		table.resetTableCards();
 		table.resetDeck();
 		table.sendReset();
@@ -221,7 +241,7 @@ public class Game {
 		}
 	}
 	
-	private void setBlinds() throws NotEnoughCoins{
+	protected void setBlinds() throws NotEnoughCoins{
 		int i = parameters.getActualDealer();
 		
 		while(true){

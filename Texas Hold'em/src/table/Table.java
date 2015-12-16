@@ -198,7 +198,7 @@ public class Table {
 		
 	}
 
-	private void updateFolded(int change) {
+	protected void updateFolded(int change) {
 		Player f = null;
 		for(Player p : players){
 			p.output.println("FOLD " + Integer.toString(change));
@@ -252,5 +252,15 @@ public class Table {
 			p.madeMove = false;
 		}
 		
+	}
+
+	public void revealCards(int player) {
+		
+		for(Player p: players){
+			if(p.getPlayerState() != PlayerState.QUITED){
+				p.output.println("OP_CARD 0 " + Integer.toString(player) + " " + p.getHand().getString(0));
+				p.output.println("OP_CARD 1 " + Integer.toString(player) + " " + p.getHand().getString(1));
+			}
+		}
 	}
 }

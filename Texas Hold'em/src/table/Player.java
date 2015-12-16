@@ -11,14 +11,12 @@ import cards.and.stuff.NotEnoughCoins;
 
 public class Player extends Thread{
 
-	private Socket socket;
+	public Socket socket;
 	public Coins coins;
 	private MyHand myhand;
 	private int ID;
-	public BufferedReader input;
+	protected BufferedReader input;
     public PrintWriter output;
-    //nie wiem czy siê przyda ale póki co jest. Player wie o istnieniu innych, a na swoim miejscu znajduje nulla.
-    public Player[] opponents;
     private PlayerState state;
     //aktualna wartoœ zak³adu
     public int actualWage = 0;
@@ -70,17 +68,12 @@ public class Player extends Thread{
 		return myhand;
 	}
 	
-	private int getPlayerNum() {
-		return opponents.length;
-	}
-	
 	public void run() 
 	{
 		
 		try {
 			output.println("MESSAGE All players connected");
-			System.out.println(ID + " : trying to send amount and setcash");
-			output.println("AMOUNT " + Integer.toString(getPlayerNum()));
+			System.out.println(ID + " : trying to send setcash");
 			output.println("SETCASH " + Integer.toString(getCoins()));
 			
 			while(true){

@@ -12,11 +12,11 @@ public enum GameMode {
 	public static GameMode setMode(String mode){
 		for (GameMode m : values()){
 			if(m.mode.equals(mode)){
-				System.out.println("uda³o siê");
+				System.out.println("GameMode accepted.");
 				return m;
 			}
 		}
-		System.out.println("nie uda³o siê");
+		System.out.println("GameMode denied.");
 		return setDefault();
 	}
 	
