@@ -304,8 +304,8 @@ public class PokerClient {
 
 	protected void updateDealer(int i) {
 		for(int k=0;k<activeResults.length;k++){
-			if(activeResults[i][0].getText() == "D"){
-				activeResults[i][0].setText("");
+			if(activeResults[k][0].getText() == "D"){
+				activeResults[k][0].setText(" ");
 			}
 		}
 		activeResults[i][0].setText("D");
