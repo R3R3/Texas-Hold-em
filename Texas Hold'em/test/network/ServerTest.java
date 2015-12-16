@@ -2,111 +2,175 @@ package network;
 
 import static org.junit.Assert.*;
 
-import java.io.IOException;
-import java.net.ServerSocket;
-
-import org.junit.Ignore;
 import org.junit.Test;
+
+import table.Table;
 
 public class ServerTest {
 	
 	@Test
-	public void createandshutTest(){
-		ServerSocket test = null;
-		try {
-			test = PokerServer.getSocket(666);
-		} catch (ServerNotCreated e) {fail("Exception occured");}
-		assertNotNull(test);
-		assertEquals(666,test.getLocalPort());
+	public void basicServTest() throws Exception{
+		PokerServer server = null;
+		String[] args = new String[4];
+		args[0] = "3";
+		args[1] = "100";
+		args[2] = "10";
+		args[3] = "20";
+		//args[4] = "";
 		
-		PokerServer.finalize(test);
-		assertTrue(test.isClosed());
-	}
-	
-	@Ignore
-	@Test (expected = ServerNotCreated.class)
-	public void failserverTest() throws ServerNotCreated{
+		server = new PokerServer(args);
+		assertNotNull(server);
+		server.getSocket(666);
+		assertNotNull(server.getSocket(666));
+		assertFalse(server.getSocket(666).isClosed());
+		Table t = server.getTable();
+		assertNotNull(t);
+		assertEquals(3,t.num_Players);
+		//server.connectPlayers(server.getSocket(666), t.num_Players, t);
 		
-		PokerServer.getSocket(777);
+		Game g = server.getGame(t);
+		assertNotNull(g);
+		assertEquals(10,g.parameters.getSmallBlind());
+		assertEquals(20,g.parameters.getBigBlind());
+		assertEquals(GameMode.NOLIMIT,g.parameters.getMode());
 		
-		ServerSocket test2 = PokerServer.getSocket(777);
-		
-		PokerServer.finalize(test2);
+		server.finalize(server.getSocket(666));
+		assertTrue(server.getSocket(666).isClosed());
 	}
 	
 	@Test
-	public void servTest(){
+	public void dummyTest() throws Exception{
+		PokerServer server = null;
+		String[] args = new String[5];
+		args[0] = "4";
+		args[1] = "120";
+		args[2] = "11";
+		args[3] = "22";
+		args[4] = "POTLIMIT";
 		
-		String[] args = new String[0];
-		try {
-			PokerServer.main(args);
-		} catch (Exception e) {fail("No exceptions should be thrown at this point");}
+		server = new PokerServer(args);
+		assertNotNull(server);
+		server.getSocket(669);
+		assertNotNull(server.getSocket(669));
+		assertFalse(server.getSocket(669).isClosed());
+		Table t = server.getTable();
+		assertNotNull(t);
+		assertEquals(4,t.num_Players);
+		//server.connectPlayers(server.getSocket(669), t.num_Players, t);
 		
-		args = new String[6];
+		Game g = server.getGame(t);
+		assertNotNull(g);
+		assertEquals(11,g.parameters.getSmallBlind());
+		assertEquals(22,g.parameters.getBigBlind());
+		assertEquals(GameMode.POTLIMIT,g.parameters.getMode());
 		
-		try {
-			PokerServer.main(args);
-		} catch (Exception e) {fail("No exceptions should be thrown at this point");}
+		server.finalize(server.getSocket(669));
+		assertTrue(server.getSocket(669).isClosed());
 	}
 	
 	@Test (expected = NumberFormatException.class)
-	public void incorrectPlayerFormatTest() throws Exception{
-		String[] args = new String[4];
-		args[0] = "abc";
-		args[1] = Integer.toString(100);
-		args[2] = Integer.toString(10);
-		args[3] = Integer.toString(20);
+	public void toofewargumentsTest() throws NumberFormatException{
+		@SuppressWarnings("unused")
+		PokerServer server = null;
+		String[] args = new String[3];
+		args[0] = "4";
+		args[1] = "120";
+		args[2] = "11";
+		//args[3] = "22";
 		
-		try {
-			PokerServer.main(args);
-		} catch (NumberFormatException e) {throw new NumberFormatException();}
-		catch (Exception e) {
-			e.printStackTrace();
-		}
+		server = new PokerServer(args);
 	}
 	
 	@Test (expected = NumberFormatException.class)
-	public void incorrectCashFormatTest() throws Exception{
-		String[] args = new String[4];
-		args[0] = Integer.toString(4);
-		args[1] = "100b";
-		args[2] = Integer.toString(10);
-		args[3] = Integer.toString(20);
+	public void toomuchargumentsTest() throws NumberFormatException{
+		@SuppressWarnings("unused")
+		PokerServer server = null;
+		String[] args = new String[6];
+		args[0] = "4";
+		args[1] = "120";
+		args[2] = "11";
+		args[3] = "22";
+		args[4] = "POTLIMIT";
+		args[5] = "trol";
 		
-		try {
-			PokerServer.main(args);
-		} catch (NumberFormatException e) {throw new NumberFormatException();}
+		server = new PokerServer(args);
 	}
 	
-	@Test
-	public void incompatibleDataTest() throws Exception{
-		String[] args = new String[4];
-		args[0] = Integer.toString(1);
-		args[1] = Integer.toString(100);
-		args[2] = Integer.toString(10);
-		args[3] = Integer.toString(20);
+	@Test (expected = NumberFormatException.class)
+	public void nonIntDataTest() throws NumberFormatException{
+		@SuppressWarnings("unused")
+		PokerServer server = null;
+		String[] args = new String[5];
+		args[0] = "ass";
+		args[1] = "120";
+		args[2] = "11";
+		args[3] = "22";
 		
-		PokerServer.main(args);
+		server = new PokerServer(args);
+	}
+	
+	@Test (expected = NumberFormatException.class)
+	public void minusBaseCashTest(){
+		@SuppressWarnings("unused")
+		PokerServer server = null;
+		String[] args = new String[5];
+		args[0] = "4";
+		args[1] = "-4";
+		args[2] = "11";
+		args[3] = "22";
 		
-		args[0] = Integer.toString(3);
-		args[1] = Integer.toString(0);
-		args[2] = Integer.toString(10);
-		args[3] = Integer.toString(20);
+		server = new PokerServer(args);
+	}
+	
+	@Test (expected = NumberFormatException.class)
+	public void toolessPlayersTest(){
+		@SuppressWarnings("unused")
+		PokerServer server = null;
+		String[] args = new String[5];
+		args[0] = "1";
+		args[1] = "100";
+		args[2] = "11";
+		args[3] = "22";
 		
-		PokerServer.main(args);
+		server = new PokerServer(args);
+	}
+	
+	@Test (expected = NumberFormatException.class)
+	public void toomuchPlayersTest(){
+		@SuppressWarnings("unused")
+		PokerServer server = null;
+		String[] args = new String[5];
+		args[0] = "12";
+		args[1] = "100";
+		args[2] = "11";
+		args[3] = "22";
 		
-		args[0] = Integer.toString(3);
-		args[1] = Integer.toString(100);
-		args[2] = Integer.toString(0);
-		args[3] = Integer.toString(20);
+		server = new PokerServer(args);
+	}
+	
+	@Test (expected = NumberFormatException.class)
+	public void toollittleSBTest(){
+		@SuppressWarnings("unused")
+		PokerServer server = null;
+		String[] args = new String[5];
+		args[0] = "4";
+		args[1] = "100";
+		args[2] = "0";
+		args[3] = "22";
 		
-		PokerServer.main(args);
+		server = new PokerServer(args);
+	}
+	
+	@Test (expected = NumberFormatException.class)
+	public void toolittleBBTest(){
+		@SuppressWarnings("unused")
+		PokerServer server = null;
+		String[] args = new String[5];
+		args[0] = "4";
+		args[1] = "100";
+		args[2] = "20";
+		args[3] = "19";
 		
-		args[0] = Integer.toString(3);
-		args[1] = Integer.toString(100);
-		args[2] = Integer.toString(10);
-		args[3] = Integer.toString(0);
-		
-		PokerServer.main(args);
+		server = new PokerServer(args);
 	}
 }

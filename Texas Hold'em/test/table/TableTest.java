@@ -2,12 +2,10 @@ package table;
 
 import static org.junit.Assert.*;
 
-import java.net.ServerSocket;
 import java.net.Socket;
 import java.util.ArrayList;
 
 import org.junit.Before;
-import org.junit.Ignore;
 import org.junit.Test;
 
 import cards.and.stuff.MyDeckBuilder;

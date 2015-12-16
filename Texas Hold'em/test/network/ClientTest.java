@@ -13,6 +13,7 @@ public class ClientTest {
 	@Test
 	public void clientTest() throws Exception{
 		
+		@SuppressWarnings({ "unused", "resource" })
 		ServerSocket socket = new ServerSocket(1234);
 		
 		String[] args = new String[0];
@@ -33,6 +34,9 @@ public class ClientTest {
 		client.activeResults[0][0].setText("D");
 		client.updateDealer(1);
 		assertEquals("D",client.activeResults[1][0].getText());
+		client.updateDealer(2);
+		assertEquals("D",client.activeResults[2][0].getText());
+		assertNotEquals("D",client.activeResults[1][0].getText());
 		client.updateFold(3);
 		assertTrue((client.activeResults[3][1].getBackground() == Color.RED)? true : false);
 		client.updateCash(150);

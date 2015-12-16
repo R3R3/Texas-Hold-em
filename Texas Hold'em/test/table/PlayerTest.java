@@ -1,7 +1,13 @@
 package table;
 
+import static org.junit.Assert.*;
+
+import java.net.Socket;
+
 import org.junit.Before;
 import org.junit.Test;
+
+import cards.and.stuff.NotEnoughCoins;
 
 public class PlayerTest {
 
@@ -9,16 +15,25 @@ public class PlayerTest {
 	
 	@Before
 	public void createPlayer(){
-		
+		player = new Player(100,0,new Socket());
+		player.actualWage = 20;
+		player.highestBet = 40;
+		player.tempPot = 60;
 	}
 	
 	@Test
-	public void callTest() {
-		
+	public void callTest() throws NotEnoughCoins {
+		player.call();
+		assertEquals(40,player.highestBet);
+		assertEquals(40,player.actualWage);
+		assertEquals(80,player.tempPot);
 	}
 	
 	@Test
-	public void raiseTest(){
-		
+	public void raiseTest() throws NotEnoughCoins{
+		player.raise(10);
+		assertEquals(50,player.highestBet);
+		assertEquals(50,player.actualWage);
+		assertEquals(90,player.tempPot);
 	}
 }
