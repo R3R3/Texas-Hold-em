@@ -27,13 +27,12 @@ public class TableTest {
 		serv = new ServerSocket(0);
 		
 		t = new Table(4);
+		t.canWinPlayers = new ArrayList<Player> ();
 		try {
 			for(int i=0;i<4;i++){
 				t.createPlayers(i, 100, new Socket("localhost", serv.getLocalPort()));
 			}
-		} catch (PlayerException e) {}
-		
-		
+		} catch (PlayerException e) {}	
 	}
 	
 	@Test
@@ -112,6 +111,9 @@ public class TableTest {
 	
 	@Test
 	public void oneWinnerTest(){
+		for (Player p : t.players){
+			t.canWinPlayers.add(p);
+		}
 		t.deck = new MyDeckBuilder().getDeck(new String[]{
 						"6H",
 						"0C","9C","JC","5D","6S",
@@ -132,6 +134,9 @@ public class TableTest {
 	
 	@Test
 	public void moreWinnersTest(){
+		for (Player p : t.players){
+			t.canWinPlayers.add(p);
+		}
 		t.deck = new MyDeckBuilder().getDeck(new String[]{
 						"6H",
 						"0C","9C","JC","5D","6S",

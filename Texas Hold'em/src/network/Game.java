@@ -27,11 +27,15 @@ public class Game {
 	public void StartGame() throws NotEnoughCoins{
 		
 		while(true){
+			table.canWinPlayers = new ArrayList<Player>();
+			for(Player p: table.players)
+				table.canWinPlayers.add(p);
 			round();
 			int players_with_coins=0;
 			for(Player p : table.players){
 				if(p.getCoins() >= parameters.getBigBlind() && p.getPlayerState() != PlayerState.QUITED){
 					players_with_coins++;
+					table.canWinPlayers.add(p);
 				}
 			}
 			if(players_with_coins < 2){break;};
@@ -294,20 +298,24 @@ public class Game {
 		table.notifyBet(false);
 	}
 
-	private boolean endAuction(int actual) {
-		
+	private boolean endAuction(int actual) {	
 		int wage = table.highest_bet;
-		
-		for(int i = 0; i< parameters.getPlayerNum();i++){
-			if(table.players[i].actualWage < wage && !table.players[i].isAll_in){
-				return false;
-			}
-		}
-		if(table.players[actual].actualWage == wage && actual == table.player_with_highest_bet){
+		if(wage == parameters.getBigBlind() && actual != parameters.getActualBB()){
 			return false;
 		}
-		
+		for(Player p: table.canWinPlayers)
+		{
+			if(p.getPlayerState()== PlayerState.QUITED ||
+					p.getPlayerState()== PlayerState.FOLDED	)
+			{
+					table.canWinPlayers.remove(p);
+					continue;
+			}
+			else{
+				if(p.actualWage != wage)
+					return false;
+			}
+		}
 		return true;
 	}
-	
 }
