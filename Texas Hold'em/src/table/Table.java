@@ -71,7 +71,7 @@ public class Table {
 	}
 	
 	public void createPlayers(int ID, int basecash, Socket socket) throws PlayerException {
-			players[ID] = new Player(basecash,ID, socket);
+			players[ID] = new Player(basecash,ID, socket, num_Players);
 	}
 	
 	private void prepareTableCards(){
@@ -168,12 +168,14 @@ public class Table {
 		
 		if(players[change].getPlayerState() == PlayerState.FOLDED){
 			updateFolded(change);
+			this.canWinPlayers.remove(players[change]);
 		}
 		int diff = players[change].tempPot - pot.amount();
 		players[change].coins.giveCoinsTo(pot, diff);
 		if(players[change].highestBet > highest_bet){
 			highest_bet = players[change].highestBet; 
 			player_with_highest_bet = change;
+			notifyBet(false);
 		}
 		updateHighestBet();
 		refreshPlayers();
@@ -262,5 +264,19 @@ public class Table {
 				p.output.println("OP_CARD 1 " + Integer.toString(player) + " " + p.getHand().getString(1));
 			}
 		}
+	}
+
+	public void notifyBet(boolean availableBet) {
+		for(Player p: players){
+			if(p.getPlayerState() != PlayerState.QUITED){
+				if(availableBet){
+					p.output.println("BET T");
+				}
+				else {
+					p.output.println("BET F");
+				}
+			}
+		}
+		
 	}
 }

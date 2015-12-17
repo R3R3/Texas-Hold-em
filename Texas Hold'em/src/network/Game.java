@@ -78,14 +78,17 @@ public class Game {
 		table.giveTableCards(TableCardsTurns.FLOP);
 		table.notifyAboutTable(TableCardsTurns.FLOP); 
 		table.setAllNotMoved();
+		table.notifyBet(true);
 		auction(false);
 		table.giveTableCards(TableCardsTurns.TURN);
 		table.notifyAboutTable(TableCardsTurns.TURN);
 		table.setAllNotMoved();
+		table.notifyBet(true);
 		auction(false);
 		table.giveTableCards(TableCardsTurns.RIVER);
 		table.notifyAboutTable(TableCardsTurns.RIVER);
 		table.setAllNotMoved();
+		table.notifyBet(true);
 		auction(false);
 		findWinners();
 		revealCards();
@@ -251,6 +254,7 @@ public class Game {
 				
 				if(table.players[i].getCoins() < parameters.getSmallBlind()) {
 					table.players[i].setPlayerState(PlayerState.QUITED);
+					table.canWinPlayers.remove(table.players[i]);
 					table.players[i].output.println("MESSAGE You lost: Not enough money to give SmallBlind");
 					continue;
 				}
@@ -272,6 +276,7 @@ public class Game {
 				
 				if(table.players[i].getCoins() < parameters.getBigBlind()) {
 					table.players[i].setPlayerState(PlayerState.QUITED);
+					table.canWinPlayers.remove(table.players[i]);
 					table.players[i].output.println("MESSAGE You lost: Not enough money to give BigBlind");
 					continue;
 				}
@@ -285,6 +290,8 @@ public class Game {
 				break;
 			}
 		}
+		
+		table.notifyBet(false);
 	}
 
 	private boolean endAuction(int actual) {

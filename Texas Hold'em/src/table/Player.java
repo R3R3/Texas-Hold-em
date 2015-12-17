@@ -15,6 +15,7 @@ public class Player extends Thread{
 	public Coins coins;
 	private MyHand myhand;
 	private int ID;
+	private int playerNum;
 	protected BufferedReader input;
     public PrintWriter output;
     private PlayerState state;
@@ -37,10 +38,11 @@ public class Player extends Thread{
 		this.state = state;
 	}
 	
-	Player (int coins, int ID, Socket socket) 
+	Player (int coins, int ID, Socket socket, int playerNum) 
 	{
 		this.coins = new Coins(coins);
 		this.ID = ID;
+		this.playerNum = playerNum;
 		setPlayerState(PlayerState.INACTIVE);
 		myhand = new MyHand();
 		this.socket = socket;
@@ -73,7 +75,8 @@ public class Player extends Thread{
 		
 		try {
 			output.println("MESSAGE All players connected");
-			System.out.println(ID + " : trying to send setcash");
+			System.out.println(ID + " : trying to send amount and setcash");
+			output.println("AMOUNT " + playerNum);
 			output.println("SETCASH " + Integer.toString(getCoins()));
 			
 			while(true){
@@ -142,6 +145,9 @@ public class Player extends Thread{
 			
 		} catch (IOException e) {
 			System.out.println("Player " + ID +  " Died: " + e);
+		} catch (NullPointerException e) {
+			//player disappeared
+			state = PlayerState.QUITED;
 		} finally {
 			try{socket.close();} catch(IOException e) {}
 		}

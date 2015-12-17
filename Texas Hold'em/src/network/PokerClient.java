@@ -37,7 +37,21 @@ Server ---> Client
 MESSAGE <text> (String)
 WELCOME <n> (int)
 AMOUNT <n> (int)
-to be continued...	
+SETCASH
+ACTIVE
+INACTIVE
+POT
+CASH
+WAGE
+CARD
+OP_WAGE
+OP_CASH
+OP_CARD
+TABLE
+RESET
+DEALER
+FOLD
+BET
 */
 
 public class PokerClient {
@@ -48,6 +62,7 @@ public class PokerClient {
     protected PrintWriter out;
     private int MyID;
     public int pot;
+    public boolean available_bet = true;
     
     protected JFrame frame = new JFrame("Texas Hold'em !");
     protected JLabel messageLabel = new JLabel("");
@@ -83,27 +98,7 @@ public class PokerClient {
 			@Override
 			public void actionPerformed(ActionEvent e) {
 				//when pressed
-				int bet =0;
-				try {
-					bet = Integer.parseInt(betText.getText());
-					if(bet <= 0 || bet > Integer.parseInt(activeResults[MyID][2].getText())){
-						throw new NumberFormatException();
-					}
-					if(bet == Integer.parseInt(activeResults[MyID][2].getText())){
-						//bet with all money == all-in
-						out.println("ALL-IN " );
-						System.out.println("ALL-IN (from bet)" );
-						betText.setText("");
-						return;
-					}
-					out.println("BET " + Integer.toString(bet));
-					System.out.println("BET " + Integer.toString(bet));
-
-				} catch (NumberFormatException x) {
-					System.out.println("betText data error");
-				}
-				
-				betText.setText("");
+				betAction();
 			}
 			}
 		);
@@ -112,8 +107,7 @@ public class PokerClient {
 			@Override
 			public void actionPerformed(ActionEvent e) {
 				//when pressed
-				out.println("CHECK " );
-				System.out.println("CHECK " );
+				checkAction();
 			}
 			}
 		);
@@ -122,27 +116,7 @@ public class PokerClient {
 			@Override
 			public void actionPerformed(ActionEvent e) {
 				//when pressed
-				int raise =0;
-				try {
-					raise = Integer.parseInt(raiseText.getText());
-					if(raise <= 0 || (raise + highestWage() - Integer.parseInt(activeResults[MyID][3].getText())) > Integer.parseInt(activeResults[MyID][2].getText())){
-						throw new NumberFormatException();
-					}
-					if(raise == Integer.parseInt(activeResults[MyID][2].getText())){
-						//raise with all money == all-in
-						out.println("ALL-IN " );
-						System.out.println("ALL-IN (from raise)" );
-						raiseText.setText("");
-						return;
-					}
-					out.println("RAISE " + Integer.toString(raise));
-					System.out.println("RAISE " + Integer.toString(raise));
-
-				} catch (NumberFormatException x) {
-					System.out.println("raiseText data error");
-				}
-				
-				raiseText.setText("");
+				raiseAction();
 			}
 			}
 		);
@@ -151,8 +125,7 @@ public class PokerClient {
 			@Override
 			public void actionPerformed(ActionEvent e) {
 				//when pressed
-				out.println("CALL " );
-				System.out.println("CALL " );
+				callAction();
 			}
 			}
 		);
@@ -161,9 +134,7 @@ public class PokerClient {
 			@Override
 			public void actionPerformed(ActionEvent e) {
 				//when pressed
-				setInactive();
-				out.println("FOLD " );
-				System.out.println("FOLD " );
+				foldAction();
 			}
 			}
 		);
@@ -172,8 +143,7 @@ public class PokerClient {
 			@Override
 			public void actionPerformed(ActionEvent e) {
 				//when pressed
-				out.println("ALL-IN " );
-				System.out.println("ALL-IN " );
+				all_inAction();
 			}
 			}
 		);
@@ -207,6 +177,96 @@ public class PokerClient {
 		frame.pack();
 	}
 	
+	protected String all_inAction() {
+		String message = "ALL-IN ";
+		setInactive();
+		out.println(message);
+		System.out.println(message);
+		return message;
+	}
+
+	protected String foldAction() {
+		String message = "FOLD ";
+		setInactive();
+		out.println(message);
+		System.out.println(message);
+		return message;
+	}
+
+	protected String callAction() {
+		String message = "CALL ";
+		setInactive();
+		out.println(message);
+		System.out.println(message);
+		return message;
+	}
+
+	protected String raiseAction() {
+		String message = "RAISE ";
+		int raise =0;
+		try {
+			raise = Integer.parseInt(raiseText.getText());
+			if(raise <= 0 || (raise + highestWage() - Integer.parseInt(activeResults[MyID][3].getText())) > Integer.parseInt(activeResults[MyID][2].getText())){
+				throw new NumberFormatException();
+			}
+			/* since we respect all in as a move only with no enough coins, there's no way to make all in through raise
+			 * if(raise == Integer.parseInt(activeResults[MyID][2].getText())){
+				//raise with all money == all-in
+				out.println("ALL-IN " );
+				System.out.println("ALL-IN (from raise)" );
+				raiseText.setText("");
+				return;
+			}*/
+			message += Integer.toString(raise);
+			out.println(message);
+			System.out.println(message);
+			setInactive();
+
+		} catch (NumberFormatException x) {
+			System.out.println("raiseText data error");
+		}
+		
+		raiseText.setText("");
+		return message;
+	}
+
+	protected String checkAction() {
+		String message = "CHECK ";
+		setInactive();
+		out.println(message);
+		System.out.println(message);
+		return message;
+	}
+
+	protected String betAction() {
+		String message = "BET ";
+		int bet =0;
+		try {
+			bet = Integer.parseInt(betText.getText());
+			if(bet <= 0 || bet > Integer.parseInt(activeResults[MyID][2].getText())){
+				throw new NumberFormatException();
+			}
+			/* since we respect all in as a move only with no enough coins, there's no way to make all in through bet
+			 * if(bet == Integer.parseInt(activeResults[MyID][2].getText())){
+				//bet with all money == all-in
+				out.println("ALL-IN " );
+				System.out.println("ALL-IN (from bet)" );
+				betText.setText("");
+				return;
+			}*/
+			message += Integer.toString(bet);
+			out.println(message);
+			System.out.println(message);
+			setInactive();
+
+		} catch (NumberFormatException x) {
+			System.out.println("betText data error");
+		}
+		
+		betText.setText("");
+		return message;
+	}
+
 	public void play() throws Exception{
 		String response;
 		try{
@@ -285,6 +345,14 @@ public class PokerClient {
 					int i = Integer.parseInt(response.substring(9, 10));
 					activeResults[id][4 + i].setText(response.substring(11));
 					frame.pack();
+				}
+				else if (response.startsWith("BET")){
+					if(response.charAt(4) == 'T'){
+						available_bet = true;
+					}
+					else if (response.charAt(4) == 'F'){
+						available_bet = false;
+					}
 				}
 			}
 		}
@@ -408,11 +476,34 @@ public class PokerClient {
 	}
 	
 	public void setActive(){
-		for(JButton b : buttons){
-			b.setEnabled(true);
+		
+		//bet
+		if(available_bet && Integer.parseInt(activeResults[MyID][2].getText()) > 0){
+			betText.setEnabled(true);
+			buttons[0].setEnabled(true);
 		}
-		raiseText.setEnabled(true);
-		betText.setEnabled(true);
+		//raise
+		if(!available_bet && Integer.parseInt(activeResults[MyID][3].getText()) < highestWage() &&
+				highestWage() - Integer.parseInt(activeResults[MyID][3].getText()) < Integer.parseInt(activeResults[MyID][2].getText())){
+			raiseText.setEnabled(true);
+			buttons[1].setEnabled(true);
+		}
+		//check
+		if(Integer.parseInt(activeResults[MyID][3].getText()) == highestWage()){
+			buttons[2].setEnabled(true);
+		}
+		//call
+		if(!available_bet && Integer.parseInt(activeResults[MyID][3].getText()) < highestWage() 
+				&& highestWage() - Integer.parseInt(activeResults[MyID][3].getText()) <= Integer.parseInt(activeResults[MyID][2].getText()) ){
+			buttons[3].setEnabled(true);
+		}
+		//fold
+		//no if clause - fold is always open
+			buttons[4].setEnabled(true);
+		//all-in
+		if(!available_bet && highestWage() - Integer.parseInt(activeResults[MyID][3].getText()) > Integer.parseInt(activeResults[MyID][2].getText())){
+			buttons[5].setEnabled(true);
+		}
 	}
 	
 	public void updatePot(int pot){
