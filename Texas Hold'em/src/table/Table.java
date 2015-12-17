@@ -23,6 +23,7 @@ public class Table {
 		prepareTableCards();
 		players = new Player[num_Players];
 		pot = new Coins();
+		canWinPlayers = new ArrayList<Player>();
 	}
 	
 	public int setNextDealer() {

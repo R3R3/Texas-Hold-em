@@ -298,13 +298,14 @@ public class Game {
 		table.notifyBet(false);
 	}
 
-	private boolean endAuction(int actual) {	
+	public boolean endAuction(int actual) {	
 		int wage = table.highest_bet;
 		if(wage == parameters.getBigBlind() && actual != parameters.getActualBB()){
 			return false;
 		}
-		for(Player p: table.canWinPlayers)
+		for(int i = 0 ; i < table.players.length;i++)
 		{
+			Player p = table.players[i];
 			if(p.getPlayerState()== PlayerState.QUITED ||
 					p.getPlayerState()== PlayerState.FOLDED	)
 			{
@@ -312,7 +313,7 @@ public class Game {
 					continue;
 			}
 			else{
-				if(p.actualWage != wage)
+				if(p.actualWage != wage && !p.isAll_in)
 					return false;
 			}
 		}
