@@ -5,6 +5,7 @@ import static org.junit.Assert.*;
 import java.io.IOException;
 import java.net.ServerSocket;
 import java.net.Socket;
+import java.util.ArrayList;
 
 import org.junit.After;
 import org.junit.Before;
@@ -26,7 +27,7 @@ public class GameTest {
 	public void SetUp() throws IOException{
 		t = new Table(5);
 		serv = new ServerSocket(0);
-		
+		t.canWinPlayers = new ArrayList<Player> ();
 		try {
 			for(int i=0;i<5;i++){
 				t.createPlayers(i, 100, new Socket("localhost", serv.getLocalPort()));

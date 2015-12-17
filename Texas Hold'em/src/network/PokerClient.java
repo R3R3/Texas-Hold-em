@@ -61,7 +61,7 @@ public class PokerClient {
     protected BufferedReader in;
     protected PrintWriter out;
     private int MyID;
-    public int pot;
+	public int pot;
     public boolean available_bet = true;
     
     protected JFrame frame = new JFrame("Texas Hold'em !");
@@ -75,6 +75,10 @@ public class PokerClient {
     protected JPanel board = new JPanel(new BorderLayout( 20, 20));
     protected JLabel[] tableCards = new JLabel[5];
     protected JLabel[][] activeResults;
+    
+    public void setMyID(int myID) {
+		MyID = myID;
+	}
 	
 	public PokerClient(String ServerAddress) throws Exception { 
 		socket = new Socket(ServerAddress, PORT);
@@ -273,7 +277,7 @@ public class PokerClient {
 			response = in.readLine();
 			if (response.startsWith("WELCOME")) {
 				String id = response.substring(15);
-				MyID = Integer.parseInt(id);
+				setMyID(Integer.parseInt(id));
 				frame.setTitle("Texas Hold'em - Player " + id);
 			}
 			while (true){
@@ -483,7 +487,7 @@ public class PokerClient {
 			buttons[0].setEnabled(true);
 		}
 		//raise
-		if(!available_bet && Integer.parseInt(activeResults[MyID][3].getText()) < highestWage() &&
+		if(!available_bet && Integer.parseInt(activeResults[MyID][3].getText()) <= highestWage() &&
 				highestWage() - Integer.parseInt(activeResults[MyID][3].getText()) < Integer.parseInt(activeResults[MyID][2].getText())){
 			raiseText.setEnabled(true);
 			buttons[1].setEnabled(true);

@@ -79,8 +79,11 @@ public class TableTest {
 		
 		t.players[3].isDealer = true;
 		t.setNextDealer();
-		
 		assertTrue(t.players[0].isDealer);
+		
+		t.players[1].setPlayerState(PlayerState.QUITED);
+		t.setNextDealer();
+		assertTrue(t.players[2].isDealer);
 	}
 	
 	@Test
@@ -176,6 +179,7 @@ public class TableTest {
 	@Test
 	public void signalTest() throws IOException{
 		
+		t.players[1].setPlayerState(PlayerState.QUITED);
 		t.sendReset();
 		assertNotNull(t.canWinPlayers);
 		t.give2CardsToPlayers();
@@ -216,6 +220,10 @@ public class TableTest {
 		t.updatePot(0);
 		assertEquals(10,t.players[3].highestBet);
 		assertEquals(10,t.players[2].tempPot);
+		
+		t.players[1].setPlayerState(PlayerState.FOLDED);
+		t.updatePot(1);
+		assertFalse(t.canWinPlayers.contains(t.players[1]));
 	}
 	
 	@After

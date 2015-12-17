@@ -26,14 +26,16 @@ public class ClientTest {
 		client.frame.setSize(400, 400);
 		client.frame.setResizable(false);
 		client.frame.setVisible(true);
-		client.setInactive();
-		assertFalse(client.buttons[1].isEnabled());
-		client.setActive();
-		assertTrue(client.buttons[1].isEnabled());
 		client.setMainBoard(4);
 		assertEquals(4,client.activeResults.length);
 		client.setBasecash(100);
 		assertEquals(100,Integer.parseInt(client.activeResults[0][2].getText()));
+		client.setMyID(0);
+		client.activeResults[0][3].setText("20");
+		//_ 0 100 20 _ _
+		client.setActive();
+		assertTrue(client.buttons[4].isEnabled());
+		
 		client.activeResults[0][0].setText("D");
 		client.updateDealer(1);
 		assertEquals("D",client.activeResults[1][0].getText());
