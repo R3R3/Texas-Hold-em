@@ -168,6 +168,7 @@ public class Table {
 		
 		if(players[change].getPlayerState() == PlayerState.FOLDED){
 			updateFolded(change);
+			this.canWinPlayers.remove(players[change]);
 		}
 		int diff = players[change].tempPot - pot.amount();
 		players[change].coins.giveCoinsTo(pot, diff);
