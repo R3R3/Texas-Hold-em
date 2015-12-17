@@ -2,19 +2,22 @@ package network;
 
 import static org.junit.Assert.*;
 import java.awt.Color;
+import java.io.IOException;
 import java.net.ServerSocket;
 
 import javax.swing.JFrame;
 
+import org.junit.After;
 import org.junit.Test;
 
 public class ClientTest {
 
+	ServerSocket socket;
+	
 	@Test
 	public void clientTest() throws Exception{
 		
-		@SuppressWarnings({ "unused", "resource" })
-		ServerSocket socket = new ServerSocket(1234);
+		socket = new ServerSocket(1234);
 		
 		String[] args = new String[0];
 		String serveraddress = (args.length == 0) ? "localhost" : args[0];
@@ -53,7 +56,36 @@ public class ClientTest {
 		
 		client.reset();
 		assertEquals(" ", client.tableCards[0].getText());
-		assertEquals("0", client.activeResults[0][3].getText());		
+		assertEquals("0", client.activeResults[0][3].getText());
+		
+		
+		assertEquals("ALL-IN ",client.all_inAction());
+		assertEquals("CALL ",client.callAction());
+		assertEquals("CHECK ",client.checkAction());
+		assertEquals("FOLD ",client.foldAction());
+		client.betText.setText("10");
+		assertEquals("BET 10",client.betAction());
+		client.betText.setText("sda");
+		assertEquals("BET ",client.betAction());
+		client.betText.setText("0");
+		assertEquals("BET ",client.betAction());
+		client.betText.setText("1000000000");
+		assertEquals("BET ",client.betAction());
+		
+		client.raiseText.setText("10");
+		assertEquals("RAISE 10",client.raiseAction());
+		client.raiseText.setText("dsad");
+		assertEquals("RAISE ",client.raiseAction());
+		client.raiseText.setText("0");
+		assertEquals("RAISE ",client.raiseAction());
+		client.raiseText.setText("10000000");
+		assertEquals("RAISE ",client.raiseAction());
+		
 	
+	}
+	
+	@After
+	public void cleanUp() throws IOException{
+		socket.close();
 	}
 }

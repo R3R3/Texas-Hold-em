@@ -98,8 +98,11 @@ public class ServerTest {
 		args[1] = "120";
 		args[2] = "11";
 		//args[3] = "22";
-		
-		server = new PokerServer(args);
+		try{
+			server = new PokerServer(args);
+		} catch (NumberFormatException e){
+			throw new NumberFormatException(e.getMessage());
+		}
 	}
 	
 	@Test (expected = NumberFormatException.class)
@@ -113,8 +116,11 @@ public class ServerTest {
 		args[3] = "22";
 		args[4] = "POTLIMIT";
 		args[5] = "trol";
-		
-		server = new PokerServer(args);
+		try{
+			server = new PokerServer(args);
+		} catch (NumberFormatException e){
+			throw new NumberFormatException(e.getMessage());
+		}
 	}
 	
 	@Test (expected = NumberFormatException.class)
@@ -126,8 +132,11 @@ public class ServerTest {
 		args[1] = "120";
 		args[2] = "11";
 		args[3] = "22";
-		
-		server = new PokerServer(args);
+		try{
+			server = new PokerServer(args);
+		} catch (NumberFormatException e){
+			throw new NumberFormatException(e.getMessage());
+		}
 	}
 	
 	@Test (expected = NumberFormatException.class)
@@ -139,8 +148,11 @@ public class ServerTest {
 		args[1] = "-4";
 		args[2] = "11";
 		args[3] = "22";
-		
-		server = new PokerServer(args);
+		try{
+			server = new PokerServer(args);
+		} catch (NumberFormatException e){
+			throw new NumberFormatException(e.getMessage());
+		}
 	}
 	
 	@Test (expected = NumberFormatException.class)
@@ -152,8 +164,12 @@ public class ServerTest {
 		args[1] = "100";
 		args[2] = "11";
 		args[3] = "22";
+		try{
+			server = new PokerServer(args);
+		} catch (NumberFormatException e){
+			throw new NumberFormatException(e.getMessage());
+		}
 		
-		server = new PokerServer(args);
 	}
 	
 	@Test (expected = NumberFormatException.class)
@@ -165,8 +181,12 @@ public class ServerTest {
 		args[1] = "100";
 		args[2] = "11";
 		args[3] = "22";
+		try{
+			server = new PokerServer(args);
+		} catch (NumberFormatException e){
+			throw new NumberFormatException(e.getMessage());
+		}
 		
-		server = new PokerServer(args);
 	}
 	
 	@Test (expected = NumberFormatException.class)
@@ -178,8 +198,11 @@ public class ServerTest {
 		args[1] = "100";
 		args[2] = "0";
 		args[3] = "22";
-		
-		server = new PokerServer(args);
+		try{
+			server = new PokerServer(args);
+		} catch (NumberFormatException e){
+			throw new NumberFormatException(e.getMessage());
+		}
 	}
 	
 	@Test (expected = NumberFormatException.class)
@@ -191,7 +214,10 @@ public class ServerTest {
 		args[1] = "100";
 		args[2] = "20";
 		args[3] = "19";
-		
-		server = new PokerServer(args);
+		try{
+			server = new PokerServer(args);
+		} catch (NumberFormatException e){
+			throw new NumberFormatException(e.getMessage());
+		}
 	}
 }
