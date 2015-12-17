@@ -266,7 +266,7 @@ public class Game {
 				parameters.setActualSB(i);
 				table.players[i].actualWage = parameters.getSmallBlind();
 				table.players[i].tempPot += parameters.getSmallBlind();
-				table.players[i].highestBet += parameters.getSmallBlind();
+				table.players[i].highestBet = parameters.getSmallBlind();
 				table.updatePot(i);
 				break;
 			}
