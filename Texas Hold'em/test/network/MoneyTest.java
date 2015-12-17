@@ -19,7 +19,7 @@ public class MoneyTest {
 	public void setUp() throws Exception {
 		t = new Table(6);
 		for(int i = 0; i < 6 ; i ++){
-			t.createPlayers(i, 0, new Socket());
+			t.createPlayers(i,0, new Socket());
 		}
 		g =  new Game(t);
 		t.deck = new MyDeckBuilder().getDeck(new String[]{
