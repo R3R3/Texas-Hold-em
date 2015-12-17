@@ -27,9 +27,11 @@ public class Game {
 	public void StartGame() throws NotEnoughCoins{
 		
 		while(true){
+			table.canWinPlayers = new ArrayList<Player>();
+			for(Player p: table.players)
+				table.canWinPlayers.add(p);
 			round();
 			int players_with_coins=0;
-			table.canWinPlayers = new ArrayList<Player>();
 			for(Player p : table.players){
 				if(p.getCoins() >= parameters.getBigBlind() && p.getPlayerState() != PlayerState.QUITED){
 					players_with_coins++;
@@ -253,6 +255,7 @@ public class Game {
 				
 				if(table.players[i].getCoins() < parameters.getSmallBlind()) {
 					table.players[i].setPlayerState(PlayerState.QUITED);
+					table.canWinPlayers.remove(table.players[i]);
 					table.players[i].output.println("MESSAGE You lost: Not enough money to give SmallBlind");
 					continue;
 				}
@@ -274,6 +277,7 @@ public class Game {
 				
 				if(table.players[i].getCoins() < parameters.getBigBlind()) {
 					table.players[i].setPlayerState(PlayerState.QUITED);
+					table.canWinPlayers.remove(table.players[i]);
 					table.players[i].output.println("MESSAGE You lost: Not enough money to give BigBlind");
 					continue;
 				}
@@ -296,8 +300,16 @@ public class Game {
 		}
 		for(Player p: table.canWinPlayers)
 		{
-			if(p.actualWage != wage)
-				return false;
+			if(p.getPlayerState()== PlayerState.QUITED ||
+					p.getPlayerState()== PlayerState.FOLDED	)
+			{
+					table.canWinPlayers.remove(p);
+					continue;
+			}
+			else{
+				if(p.actualWage != wage)
+					return false;
+			}
 		}
 		return true;
 	}
