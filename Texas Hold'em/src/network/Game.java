@@ -83,16 +83,19 @@ public class Game {
 		table.notifyAboutTable(TableCardsTurns.FLOP); 
 		table.setAllNotMoved();
 		table.notifyBet(true);
+		if(parameters.getMode() == GameMode.FIXEDLIMIT){ table.setFixedbounds(parameters.getFixedbounds()); table.notifyfixedunlock();}
 		auction(false);
 		table.giveTableCards(TableCardsTurns.TURN);
 		table.notifyAboutTable(TableCardsTurns.TURN);
 		table.setAllNotMoved();
 		table.notifyBet(true);
+		if(parameters.getMode() == GameMode.FIXEDLIMIT){ table.setFixedbounds(parameters.getFixedbounds()); table.notifyfixedunlock();}
 		auction(false);
 		table.giveTableCards(TableCardsTurns.RIVER);
 		table.notifyAboutTable(TableCardsTurns.RIVER);
 		table.setAllNotMoved();
 		table.notifyBet(true);
+		if(parameters.getMode() == GameMode.FIXEDLIMIT){ table.setFixedbounds(parameters.getFixedbounds()); table.notifyfixedunlock();}
 		auction(false);
 		findWinners();
 		revealCards();
@@ -271,7 +274,7 @@ public class Game {
 				break;
 			}
 		}
-		
+		if(parameters.getMode() == GameMode.FIXEDLIMIT){ table.setFixedbounds(parameters.getFixedbounds()); table.notifyfixedunlock();}
 		i = parameters.getActualSB();
 		while(true){
 			i++;
@@ -317,5 +320,15 @@ public class Game {
 			}
 		}
 		return true;
+	}
+
+
+	public void notifygameMode() {
+		table.notifyGameMode(parameters.getMode());
+	}
+
+
+	public void notifyFixedstuff(int fixedraise) {
+		table.notifyFixedstuff(fixedraise, parameters.getFixedbounds());
 	}
 }

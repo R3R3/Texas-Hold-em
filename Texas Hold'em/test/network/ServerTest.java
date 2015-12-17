@@ -2,8 +2,13 @@ package network;
 
 import static org.junit.Assert.*;
 
+import java.net.Socket;
+import java.util.ArrayList;
+
 import org.junit.Test;
 
+import table.Player;
+import table.PlayerException;
 import table.Table;
 
 public class ServerTest {
@@ -24,6 +29,12 @@ public class ServerTest {
 		assertNotNull(server.getSocket(666));
 		assertFalse(server.getSocket(666).isClosed());
 		Table t = server.getTable();
+		t.canWinPlayers = new ArrayList<Player> ();
+		try {
+			for(int i=0;i<3;i++){
+				t.createPlayers(i, 100, new Socket("localhost", 666));
+			}
+		} catch (PlayerException e) {}	
 		assertNotNull(t);
 		assertEquals(3,t.num_Players);
 		//server.connectPlayers(server.getSocket(666), t.num_Players, t);
@@ -54,6 +65,12 @@ public class ServerTest {
 		assertNotNull(server.getSocket(669));
 		assertFalse(server.getSocket(669).isClosed());
 		Table t = server.getTable();
+		t.canWinPlayers = new ArrayList<Player> ();
+		try {
+			for(int i=0;i<4;i++){
+				t.createPlayers(i, 100, new Socket("localhost", 669));
+			}
+		} catch (PlayerException e) {}	
 		assertNotNull(t);
 		assertEquals(4,t.num_Players);
 		//server.connectPlayers(server.getSocket(669), t.num_Players, t);
@@ -81,6 +98,12 @@ public class ServerTest {
 		server = new PokerServer(args);
 		server.getSocket(669);
 		Table t = server.getTable();
+		t.canWinPlayers = new ArrayList<Player> ();
+		try {
+			for(int i=0;i<4;i++){
+				t.createPlayers(i, 100, new Socket("localhost", 669));
+			}
+		} catch (PlayerException e) {}	
 		//server.connectPlayers(server.getSocket(669), t.num_Players, t);
 		
 		Game g = server.getGame(t);
@@ -109,7 +132,7 @@ public class ServerTest {
 	public void toomuchargumentsTest() throws NumberFormatException{
 		@SuppressWarnings("unused")
 		PokerServer server = null;
-		String[] args = new String[6];
+		String[] args = new String[8];
 		args[0] = "4";
 		args[1] = "120";
 		args[2] = "11";

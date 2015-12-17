@@ -10,7 +10,16 @@ public class GameParameters {
 	private int actualDealer;
 	private int actualSB;
 	private int actualBB;
+	private int fixedbounds;
 	
+	public int getFixedbounds() {
+		return fixedbounds;
+	}
+
+	public void setFixedbounds(int fixedbounds) {
+		this.fixedbounds = fixedbounds;
+	}
+
 	public int getPlayerNum() {
 		return PlayerNum;
 	}
