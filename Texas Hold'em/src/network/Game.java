@@ -288,7 +288,7 @@ public class Game {
 				parameters.setActualBB(i);
 				table.players[i].actualWage = parameters.getBigBlind();
 				table.players[i].tempPot += parameters.getBigBlind();
-				table.players[i].highestBet += parameters.getBigBlind();
+				table.players[i].highestBet = parameters.getBigBlind();
 				table.player_with_highest_bet = i;
 				table.updatePot(i);
 				break;
