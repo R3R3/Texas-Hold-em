@@ -87,6 +87,31 @@ public class TableTest {
 	}
 	
 	@Test
+	public void nextdealerTest(){
+		assertEquals(-1, t.setNextDealer());
+		t.players[3].isDealer = true;
+		t.players[0].setPlayerState(PlayerState.QUITED);
+		t.setNextDealer();
+		assertTrue(t.players[1].isDealer);
+	}
+	
+	@Test
+	public void randomdealerTest(){
+		t.players[0].setPlayerState(PlayerState.QUITED);
+		t.players[2].setPlayerState(PlayerState.QUITED);
+		t.players[1].setPlayerState(PlayerState.QUITED);
+		assertEquals(3,t.getRandomDealer());
+	}
+	
+	@Test
+	public void anothernextdealerTest(){
+		t.players[2].isDealer = true;
+		t.players[3].setPlayerState(PlayerState.QUITED);
+		t.setNextDealer();
+		assertTrue(t.players[0].isDealer);
+	}
+	
+	@Test
 	public void give2CardsTest(){
 		
 		t.give2CardsToPlayers();
@@ -194,6 +219,10 @@ public class TableTest {
 		t.notifyDealer(3);
 		
 		t.revealCards(0);
+		
+		t.players[0].setPlayerState(PlayerState.QUITED);
+		t.notifyBet(true);
+		t.notifyfixedunlock();
 	}
 	
 	@Test
@@ -224,6 +253,14 @@ public class TableTest {
 		t.players[1].setPlayerState(PlayerState.FOLDED);
 		t.updatePot(1);
 		assertFalse(t.canWinPlayers.contains(t.players[1]));
+		
+		t.players[0].setPlayerState(PlayerState.QUITED);
+		t.players[2].actualWage = 20;
+		t.players[2].highestBet = 20;
+		t.players[2].tempPot = 30;
+		t.fixedbounds = 1;
+		t.updatePot(2);
+		
 	}
 	
 	@After

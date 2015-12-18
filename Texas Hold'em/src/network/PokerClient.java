@@ -68,8 +68,8 @@ public class PokerClient {
 	public int pot;
     public boolean available_bet = true;
     protected GameMode mode;
-    private int fixedRaise;
-    private boolean fixblock = false;
+    protected int fixedRaise;
+    protected boolean fixblock = false;
     
     protected JFrame frame = new JFrame("Texas Hold'em !");
     protected JLabel messageLabel = new JLabel("");
@@ -229,8 +229,6 @@ public class PokerClient {
 					throw new NumberFormatException();
 				}
 			}
-			// (highestbet - mybet) + pot
-			
 			/* since we respect all in as a move only with no enough coins, there's no way to make all in through raise
 			 * if(raise == Integer.parseInt(activeResults[MyID][2].getText())){
 				//raise with all money == all-in
@@ -300,7 +298,6 @@ public class PokerClient {
 			}
 			while (true){
 				response = in.readLine();
-				//TODO: responses and actions based on messages
 				if(response.startsWith("MESSAGE")) {
 					messageLabel.setText(response.substring(8));
 				}
