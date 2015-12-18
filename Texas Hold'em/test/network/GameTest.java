@@ -65,7 +65,7 @@ public class GameTest {
 	}
 	
 	@Test
-	public void setBlindsTest() throws NotEnoughCoins{
+	public void setBlindsTest() throws NotEnoughCoins, InterruptedException{
 		game.parameters.setActualDealer(0);
 		game.parameters.setSmallBlind(10);
 		game.parameters.setBigBlind(20);
@@ -81,7 +81,7 @@ public class GameTest {
 	}
 	
 	@Test
-	public void allbranchesforsmallblindTest() throws NotEnoughCoins{
+	public void allbranchesforsmallblindTest() throws NotEnoughCoins, InterruptedException{
 		game.parameters.setActualDealer(3);
 		game.parameters.setSmallBlind(10);
 		game.parameters.setBigBlind(20);
@@ -98,7 +98,7 @@ public class GameTest {
 	}
 	
 	@Test
-	public void allbranchesforbigblindTest() throws NotEnoughCoins{
+	public void allbranchesforbigblindTest() throws NotEnoughCoins, InterruptedException{
 		game.parameters.setActualDealer(2);
 		game.parameters.setSmallBlind(10);
 		game.parameters.setBigBlind(20);

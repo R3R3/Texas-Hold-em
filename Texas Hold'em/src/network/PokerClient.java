@@ -190,7 +190,6 @@ public class PokerClient {
 	
 	protected String all_inAction() {
 		String message = "ALL-IN ";
-		setInactive();
 		out.println(message);
 		System.out.println(message);
 		return message;
@@ -198,7 +197,6 @@ public class PokerClient {
 
 	protected String foldAction() {
 		String message = "FOLD ";
-		setInactive();
 		out.println(message);
 		System.out.println(message);
 		return message;
@@ -206,7 +204,6 @@ public class PokerClient {
 
 	protected String callAction() {
 		String message = "CALL ";
-		setInactive();
 		out.println(message);
 		System.out.println(message);
 		return message;
@@ -240,7 +237,6 @@ public class PokerClient {
 			message += Integer.toString(raise);
 			out.println(message);
 			System.out.println(message);
-			setInactive();
 
 		} catch (NumberFormatException x) {
 			System.out.println("raiseText data error");
@@ -252,7 +248,6 @@ public class PokerClient {
 
 	protected String checkAction() {
 		String message = "CHECK ";
-		setInactive();
 		out.println(message);
 		System.out.println(message);
 		return message;
@@ -277,7 +272,6 @@ public class PokerClient {
 			message += Integer.toString(bet);
 			out.println(message);
 			System.out.println(message);
-			setInactive();
 
 		} catch (NumberFormatException x) {
 			System.out.println("betText data error");

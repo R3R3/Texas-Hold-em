@@ -3,7 +3,6 @@ package table;
 import java.net.Socket;
 import java.util.ArrayList;
 import java.util.Random;
-
 import cards.and.stuff.*;
 import network.GameMode;
 
@@ -173,10 +172,9 @@ public class Table {
 		
 	}
 
-	public void updatePot(int change) throws NotEnoughCoins {
+	public void updatePot(int change) throws NotEnoughCoins, InterruptedException {
 		
 		//CHYBA DZIA£A
-		
 		if(players[change].getPlayerState() == PlayerState.FOLDED){
 			updateFolded(change);
 			this.canWinPlayers.remove(players[change]);
@@ -207,7 +205,7 @@ public class Table {
 		}
 	}
 
-	private void refreshPlayers() {
+	private void refreshPlayers() throws InterruptedException {
 		
 		for(Player p: players){
 			for(int i=0;i<num_Players;i++){

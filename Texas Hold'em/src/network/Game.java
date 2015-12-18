@@ -2,6 +2,7 @@ package network;
 
 import java.util.ArrayList;
 import java.util.TreeMap;
+import java.util.concurrent.TimeUnit;
 
 import cards.and.stuff.NotEnoughCoins;
 import table.Player;
@@ -24,7 +25,7 @@ public class Game {
 	}
 	
 	
-	public void StartGame() throws NotEnoughCoins{
+	public void StartGame() throws NotEnoughCoins, InterruptedException{
 		
 		while(true){
 			table.canWinPlayers = new ArrayList<Player>();
@@ -58,7 +59,7 @@ public class Game {
 	 * Finding highest set
 	 * Winner takes whole pot
 	 */
-	private void round() throws NotEnoughCoins {
+	private void round() throws NotEnoughCoins, InterruptedException {
 		parameters.setRound();
 		resetBoard();
 		if(parameters.getRound() == 1){
@@ -217,7 +218,7 @@ public class Game {
 		}
 	}
 
-	private void auction(boolean isFirst) throws NotEnoughCoins{
+	private void auction(boolean isFirst) throws NotEnoughCoins, InterruptedException{
 		//logika aukcji isFirst definiuje pierwsz¹ licytacjê -> inna osoba zaczyna licytacjê
 		int i;
 		if(isFirst){
@@ -231,11 +232,11 @@ public class Game {
 			if(i == parameters.getPlayerNum()){i=0;}
 			if(table.players[i].getPlayerState() == PlayerState.FOLDED 
 					|| table.players[i].getPlayerState() == PlayerState.QUITED
-					|| table.players[i].isAll_in){continue;}
+					|| table.players[i].isAll_in){System.out.println("breakpoint 1.5");continue;}
 			table.players[i].setPlayerState(PlayerState.ACTIVE);
 			table.players[i].output.println("ACTIVE");
 			while (table.players[i].getPlayerState() == PlayerState.ACTIVE){
-			//waiting for an action which will change the state of a player	
+				TimeUnit.MILLISECONDS.sleep(100);
 			}
 			table.updatePot(i);
 			table.players[i].madeMove = true;
@@ -246,7 +247,7 @@ public class Game {
 		}
 	}
 	
-	protected void setBlinds() throws NotEnoughCoins{
+	protected void setBlinds() throws NotEnoughCoins, InterruptedException{
 		int i = parameters.getActualDealer();
 		
 		while(true){

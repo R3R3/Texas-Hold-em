@@ -241,7 +241,7 @@ public class TableTest {
 	}
 	
 	@Test
-	public void updatepotTest() throws NotEnoughCoins{
+	public void updatepotTest() throws NotEnoughCoins, InterruptedException{
 		t.players[0].actualWage = 10;
 		t.players[0].highestBet = 10;
 		t.players[0].tempPot = 10;
