@@ -86,16 +86,11 @@ public class Player extends Thread{
 					output.println("MESSAGE Your turn !");*/
 					if(response.startsWith("BET")){
 						//player pressed bet button
-						System.out.println("breakpoint P 0");
 						try {
 							int amount = Integer.parseInt(response.substring(4));
-							System.out.println("breakpoint P 1");
 							raise(amount);
-							System.out.println("breakpoint P 2");
 							state = PlayerState.INACTIVE;
-							System.out.println("breakpoint P 3");
 							output.println("INACTIVE");
-							System.out.println("breakpoint P 3");
 						} catch (NotEnoughCoins e) {
 							e.printStackTrace();
 							System.out.println("breakpoint in bet (player)?");
@@ -153,7 +148,7 @@ public class Player extends Thread{
 			System.out.println("Player " + ID +  " Died: " + e);
 		} catch (NullPointerException e) {
 			//player disappeared
-			state = PlayerState.QUITED;
+			//state = PlayerState.QUITED;
 		} finally {
 			try{socket.close();} catch(IOException e) {}
 		}

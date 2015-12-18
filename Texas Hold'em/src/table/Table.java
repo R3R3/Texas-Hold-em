@@ -205,7 +205,7 @@ public class Table {
 		}
 	}
 
-	private void refreshPlayers() throws InterruptedException {
+	public void refreshPlayers() throws InterruptedException {
 		
 		for(Player p: players){
 			for(int i=0;i<num_Players;i++){
@@ -332,6 +332,16 @@ public class Table {
 		for(Player p: players){
 			if(p.getPlayerState() != PlayerState.QUITED){
 				p.output.println("FIXUNLOCK");
+			}
+		}
+	}
+
+	public void finalizeCash() {
+		for(Player p: players){
+			if(p.getPlayerState() != PlayerState.QUITED){
+				for(int i=0;i<num_Players;i++){
+					p.output.println("");
+				}
 			}
 		}
 	}

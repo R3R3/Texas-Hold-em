@@ -79,7 +79,7 @@ public class Game {
 		table.give2CardsToPlayers();
 		table.notifyAboutCards();
 		table.setAllNotMoved();
-		table.firstBet = false;
+		table.firstBet = false;	
 		auction(true);
 		table.giveTableCards(TableCardsTurns.FLOP);
 		table.notifyAboutTable(TableCardsTurns.FLOP); 
@@ -99,9 +99,13 @@ public class Game {
 		table.notifyBet(true);
 		if(parameters.getMode() == GameMode.FIXEDLIMIT){ table.setFixedbounds(parameters.getFixedbounds()); table.notifyfixedunlock();}
 		auction(false);
+		TimeUnit.MILLISECONDS.sleep(500);
 		findWinners();
+		table.refreshPlayers();
 		revealCards();
+		TimeUnit.SECONDS.sleep(15);
 		table.pot.reset();
+		
 	}
 	
 	protected void revealCards() {

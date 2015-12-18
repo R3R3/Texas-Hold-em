@@ -354,9 +354,9 @@ public class PokerClient {
 					frame.pack();
 				}
 				else if (response.startsWith("OP_CARD")){
-					int id = Integer.parseInt(response.substring(11, 12));
-					int i = Integer.parseInt(response.substring(9, 10));
-					activeResults[id][4 + i].setText(response.substring(11));
+					int id = Integer.parseInt(response.substring(10, 11));
+					int i = Integer.parseInt(response.substring(8, 9));
+					activeResults[id][4 + i].setText(response.substring(12));
 					frame.pack();
 				}
 				else if (response.startsWith("BET")){
