@@ -150,6 +150,7 @@ public class ClientTest {
 		client.setActive();
 		assertTrue(client.buttons[2].isEnabled());
 		assertEquals("20",client.raiseText.getText());
+		assertEquals("RAISE 20",client.raiseAction());
 	}
 	
 	@Test

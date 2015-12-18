@@ -228,7 +228,7 @@ public class PokerClient {
 						|| Integer.parseInt(pot) + (highestWage() - Integer.parseInt(activeResults[MyID][3].getText())) < raise){
 					throw new NumberFormatException();
 				}
-			}
+			} else {}
 			/* since we respect all in as a move only with no enough coins, there's no way to make all in through raise
 			 * if(raise == Integer.parseInt(activeResults[MyID][2].getText())){
 				//raise with all money == all-in
