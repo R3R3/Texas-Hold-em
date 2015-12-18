@@ -24,9 +24,13 @@ public class CoinsTest {
 	
 	@Test(expected = NotEnoughCoins.class)
 	public void coinExceptionTest() throws NotEnoughCoins{
-		Coins a = new Coins();
-		Coins b = new Coins();
-		a.giveCoinsTo(b, 5);
+		Coins a = new Coins(2);
+		Coins b = new Coins(2);
+		try {
+			a.giveCoinsTo(b, 5);
+		} catch (NotEnoughCoins e) {
+			throw e;
+		}
 	}
 
 }

@@ -38,7 +38,7 @@ public class MyDeckBuilder implements DeckBuilder{
 		case "C":
 			return Color.CLUBS;
 		case "D":
-			return Color.HEARTS;
+			return Color.DIAMOND;
 		default:
 			return null;
 		}

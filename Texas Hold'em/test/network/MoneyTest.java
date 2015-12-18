@@ -52,6 +52,15 @@ public class MoneyTest {
 	}
 	
 	@Test
+	public void PotNotDividedTest() throws NotEnoughCoins{
+		t.pot = new Coins(105);
+		wages(new int[] {15,10,30,10,30,10});
+		g.findWinners();
+		assertTrue(t.players[2].coins.amount()==52 &&
+					t.players[4].coins.amount()==52 );
+	}
+	
+	@Test
 	public void allInCase1Test() throws NotEnoughCoins{
 		t.pot = new Coins(100);
 		wages(new int[] {10,10,25,10,35,10});
@@ -59,6 +68,23 @@ public class MoneyTest {
 		g.findWinners();
 		assertEquals(t.players[2].coins.amount(),45);
 		assertEquals(t.players[4].coins.amount(),55);
+	}
+	
+	@Test
+	public void ultimateAllInCaseTest() throws NotEnoughCoins{
+		t.pot = new Coins(230);
+		wages(new int[] {70,10,40,30,60,20});
+		t.players[1].isAll_in = true;
+		t.players[2].isAll_in = true;
+		t.players[3].isAll_in = true;
+		t.players[5].isAll_in = true;
+		g.findWinners();
+		assertEquals(50,t.players[0].coins.amount());
+		assertEquals(60,t.players[1].coins.amount());
+		assertEquals(30,t.players[2].coins.amount());
+		assertEquals(65,t.players[3].coins.amount());
+		assertEquals(0,t.players[4].coins.amount());
+		assertEquals(25,t.players[5].coins.amount());
 	}
 
 	private void wages(int tab []){

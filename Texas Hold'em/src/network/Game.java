@@ -129,11 +129,57 @@ public class Game {
 
 
 	public void findWinners() throws NotEnoughCoins {
-		TreeMap<Integer,ArrayList<Player>> map = new TreeMap<Integer,ArrayList<Player>> ();
+		TreeMap<Integer,ArrayList<Player>> map = makeMap();
+		fillMap(map);
 		ArrayList<Player> tmp;
 		int coins;
-		int wage = -1;
 		int prevKey = 0;
+		int wage = map.firstKey().intValue();
+		while(wage != -1){
+			coins = 0;
+			int dif = wage - prevKey;
+			coins = getPotValue(dif);
+			table.canWinPlayers = map.get(wage);
+			tmp = table.findWinner();
+			sendMoney(tmp,coins);
+			prevKey = wage;
+			wage = map.higherKey(wage)!=null?map.higherKey(wage):-1;
+		}
+	}
+	
+	private void sendMoney(ArrayList<Player> winners, int pot) throws NotEnoughCoins{
+		int amount = pot;
+		amount -= pot% winners.size();
+		for(Player p : winners){	
+			table.pot.giveCoinsTo(p.coins, amount/winners.size());
+			try{
+				p.output.println("MESSAGE You Win");
+			}
+			catch(NullPointerException e){
+				System.out.println(p.getID()+ " won "+ amount/winners.size());
+			}
+		}
+	}
+	
+	private int getPotValue(int dif){
+		int coins = 0;
+		for(Player p : table.players){
+			if(p.actualWage >= dif){
+				coins+=dif;
+				p.actualWage-=dif;
+			}
+			else
+			{
+				coins+=p.actualWage;
+				p.actualWage = 0;
+			}
+		}
+		return coins;
+	}
+	
+	private TreeMap<Integer,ArrayList<Player>> makeMap(){
+		TreeMap<Integer,ArrayList<Player>> map = new TreeMap<Integer,ArrayList<Player>> ();
+		int wage;
 		for(Player p : table.players){
 			wage = p.actualWage;
 			if(p.isAll_in || wage == table.highest_bet)
@@ -149,6 +195,11 @@ public class Game {
 				}
 			}
 		}
+		return map;
+	}
+	
+	private void fillMap(TreeMap<Integer,ArrayList<Player>> map){
+		int wage = -1;
 		for(Player p : table.players){
 			wage = p.actualWage;
 			if(p.isAll_in || wage == table.highest_bet)
@@ -158,64 +209,6 @@ public class Game {
 						map.get(i).add(p);
 					}
 				}	
-			}
-		}
-		wage = map.firstKey().intValue();
-		while(wage != -1){
-			coins = 0;
-			for(Player p : table.players){
-				int dif = wage - prevKey;
-				if(p.actualWage >= dif){
-					coins+=dif;
-					p.actualWage-=dif;
-				}
-				else
-				{
-					coins+=p.actualWage;
-					p.actualWage = 0;
-				}
-			}
-			table.canWinPlayers = map.get(wage);
-			tmp = table.findWinner();
-			sendMoney(tmp,coins);
-			prevKey = wage;
-			wage = map.higherKey(wage)!=null?map.higherKey(wage):-1;
-		}
-	}
-	
-	private void sendMoney(ArrayList<Player> winners, int pot) throws NotEnoughCoins{
-		if(winners.size() == 1){
-			table.pot.giveCoinsTo(winners.get(0).coins, pot);
-			try{
-				winners.get(0).output.println("MESSAGE You Win");
-			}
-			catch(NullPointerException e){
-				System.out.println(winners.get(0).getID()+ " won "+ pot);
-			}
-		}
-		else{
-			int amount = pot;
-			for(Player p : winners){
-				if(pot % winners.size() == 0){
-					table.pot.giveCoinsTo(p.coins, amount/winners.size());
-					try{
-						p.output.println("MESSAGE You Win");
-					}
-					catch(NullPointerException e){
-						System.out.println(p.getID()+ " won "+ amount/winners.size());
-					}
-				}
-				else {
-					int reszta = pot % winners.size();
-					amount -= reszta;
-					table.pot.giveCoinsTo(p.coins, amount/winners.size());
-					try{
-						p.output.println("MESSAGE You Win");
-					}
-					catch(NullPointerException e){
-						System.out.println(p.getID()+ " won "+ amount/winners.size());
-					}
-				}
 			}
 		}
 	}
