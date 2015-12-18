@@ -9,8 +9,8 @@ public class CoinsTest {
 	public void coinsConstructorTest(){
 		Coins b = new Coins();
 		Coins c = new Coins(8);
-		assertEquals(c.amount(),8);
-		assertEquals(b.amount(),0);
+		assertEquals(8,c.amount());
+		assertEquals(0,b.amount());
 	}
 	
 	@Test
@@ -18,8 +18,8 @@ public class CoinsTest {
 		Coins a = new Coins(5);
 		Coins b = new Coins();
 		a.giveCoinsTo(b, 3);
-		assertTrue(a.amount()==2 &&
-				b.amount()==3);
+		assertEquals(2,a.amount());
+		assertEquals(3,b.amount());
 	}
 	
 	@Test(expected = NotEnoughCoins.class)

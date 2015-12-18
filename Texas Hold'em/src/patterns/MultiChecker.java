@@ -49,9 +49,6 @@ public class MultiChecker {
 					v4=v3;
 					v3=v;
 				}
-				else if(v> v4){
-					v4 = v;
-				}
 			}
 			
 		}
@@ -92,10 +89,7 @@ public class MultiChecker {
 				} else if(v>v4){
 						v5=v4;
 						v4=v;
-					}else if(v>v5){
-							v5=v;
-						}
-				
+					}
 			}
 		}
 		if(v1==-1)

@@ -20,7 +20,7 @@ public class CheckPatternTest extends CardContainer{
 		while(deck.giveCardTo(hand));
 		CheckPatterns.setTableCards(tc);
 		t = CheckPatterns.getResult(hand);
-		assertTrue(t[0]==0);		
+		assertEquals(0,t[0]);		
 	}
 	
 	@Test
@@ -35,9 +35,9 @@ public class CheckPatternTest extends CardContainer{
 		while(deck.giveCardTo(hand));
 		CheckPatterns.setTableCards(tc);
 		t = CheckPatterns.getResult(hand);
-		assertTrue(t[0]==6);
-		assertTrue(t[1]==1);
-		assertTrue(t[2]==0);
+		assertEquals(6,t[0]);
+		assertEquals(1,t[1]);
+		assertEquals(0,t[2]);
 	}
 	
 	
