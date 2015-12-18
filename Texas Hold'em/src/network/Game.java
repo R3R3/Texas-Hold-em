@@ -78,6 +78,7 @@ public class Game {
 		table.give2CardsToPlayers();
 		table.notifyAboutCards();
 		table.setAllNotMoved();
+		table.firstBet = false;
 		auction(true);
 		table.giveTableCards(TableCardsTurns.FLOP);
 		table.notifyAboutTable(TableCardsTurns.FLOP); 
@@ -237,6 +238,7 @@ public class Game {
 			//waiting for an action which will change the state of a player	
 			}
 			table.updatePot(i);
+			
 			if(endAuction(i)){
 				we_play = false;
 			}
@@ -296,7 +298,11 @@ public class Game {
 
 	public boolean endAuction(int actual) {	
 		int wage = table.highest_bet;
-		if(wage == parameters.getBigBlind() && actual != parameters.getActualBB()){
+		if(parameters.getActualBB() == actual && table.highest_bet == parameters.getBigBlind() && table.players[actual].isAll_in== true)
+		{
+			return false;
+		}
+		if(!table.firstBet && !table.players[actual].isDealer){
 			return false;
 		}
 		for(int i = 0 ; i < table.players.length;i++)
