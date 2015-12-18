@@ -82,8 +82,8 @@ public class Player extends Thread{
 			while(true){
 					String response = input.readLine();
 				
-				if (state == PlayerState.ACTIVE) {
-					output.println("MESSAGE Your turn !");
+				/*if (state == PlayerState.ACTIVE) {
+					output.println("MESSAGE Your turn !");*/
 					if(response.startsWith("BET")){
 						//player pressed bet button
 						try {
@@ -139,7 +139,7 @@ public class Player extends Thread{
 							e.printStackTrace();
 						}
 					}
-				} 
+				//} 
 				
 			}
 			
