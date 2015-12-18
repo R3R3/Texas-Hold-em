@@ -33,6 +33,7 @@ public class ClientTest {
 		client.setMyID(0);
 		client.activeResults[0][3].setText("20");
 		//_ 0 100 20 _ _
+		client.mode = GameMode.NOLIMIT;
 		client.setActive();
 		assertTrue(client.buttons[4].isEnabled());
 		

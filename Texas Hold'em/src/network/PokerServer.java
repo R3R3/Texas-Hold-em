@@ -8,7 +8,7 @@ import table.Table;
 
 public class PokerServer {
 	
-	int amount, basecash, smallblind, bigblind;
+	int amount, basecash, smallblind, bigblind, fixedraise,fixedbounds;
 	GameMode mode;
 	int TIMEOUT = 10;
 	ServerSocket socket = null;
@@ -16,7 +16,7 @@ public class PokerServer {
 	PokerServer(String[] args){
 		
 		try{
-			if(args.length < 4 || args.length > 5){System.out.println("args error");throw new NumberFormatException("args error");}
+			if(args.length < 4 || args.length > 7){System.out.println("args error");throw new NumberFormatException("args error");}
 			
 			amount = Integer.parseInt(args[0]);
 			basecash = Integer.parseInt(args[1]);
@@ -35,6 +35,16 @@ public class PokerServer {
 				// not given -> setting default
 				System.out.println("Setting default mode");
 				mode = GameMode.setDefault();
+			}
+			
+			if(mode == GameMode.FIXEDLIMIT){
+				fixedraise = Integer.parseInt(args[5]);
+				fixedbounds = Integer.parseInt(args[6]);
+				
+				if(fixedraise <= 0 || fixedraise >= basecash - bigblind || fixedbounds <= 0){
+					System.out.println("incompatible data");
+					throw new NumberFormatException("incompatible data");
+				}
 			}
 			
 		} catch (NumberFormatException e) {
@@ -86,6 +96,11 @@ public class PokerServer {
 		game.parameters.setMode(mode);
 		game.parameters.setSmallBlind(smallblind);
 		game.parameters.setBigBlind(bigblind);
+		game.notifygameMode();
+		if(mode == GameMode.FIXEDLIMIT){
+			game.parameters.setFixedbounds(fixedbounds);
+			game.notifyFixedstuff(fixedraise);
+		}
 		return game;
 	}
 	

@@ -52,6 +52,10 @@ RESET
 DEALER
 FOLD
 BET
+MODE
+FIXLOCK
+FIXUNLOCK
+FIXRAI
 */
 
 public class PokerClient {
@@ -63,6 +67,9 @@ public class PokerClient {
     private int MyID;
 	public int pot;
     public boolean available_bet = true;
+    protected GameMode mode;
+    private int fixedRaise;
+    private boolean fixblock = false;
     
     protected JFrame frame = new JFrame("Texas Hold'em !");
     protected JLabel messageLabel = new JLabel("");
@@ -210,9 +217,20 @@ public class PokerClient {
 		int raise =0;
 		try {
 			raise = Integer.parseInt(raiseText.getText());
-			if(raise <= 0 || (raise + highestWage() - Integer.parseInt(activeResults[MyID][3].getText())) > Integer.parseInt(activeResults[MyID][2].getText())){
-				throw new NumberFormatException();
+			if(mode == GameMode.NOLIMIT){
+				if(raise <= 0 || (raise + highestWage() - Integer.parseInt(activeResults[MyID][3].getText())) > Integer.parseInt(activeResults[MyID][2].getText())){
+					throw new NumberFormatException();
+				}
 			}
+			else if(mode == GameMode.POTLIMIT){
+				String pot = Pot.getText().substring(5);
+				if(raise <= 0 || (raise + highestWage() - Integer.parseInt(activeResults[MyID][3].getText())) > Integer.parseInt(activeResults[MyID][2].getText()) 
+						|| Integer.parseInt(pot) + (highestWage() - Integer.parseInt(activeResults[MyID][3].getText())) < raise){
+					throw new NumberFormatException();
+				}
+			}
+			// (highestbet - mybet) + pot
+			
 			/* since we respect all in as a move only with no enough coins, there's no way to make all in through raise
 			 * if(raise == Integer.parseInt(activeResults[MyID][2].getText())){
 				//raise with all money == all-in
@@ -358,6 +376,26 @@ public class PokerClient {
 						available_bet = false;
 					}
 				}
+				else if (response.startsWith("MODE")){
+					if(response.charAt(5) == 'N'){
+						mode = GameMode.NOLIMIT;
+					}
+					else if(response.charAt(5) == 'P'){
+						mode = GameMode.POTLIMIT;
+					}
+					else if(response.charAt(5) == 'F'){
+						mode = GameMode.FIXEDLIMIT;
+					}
+				}
+				else if (response.startsWith("FIXLOCK")){
+					fixblock = true;
+				}
+				else if (response.startsWith("FIXUNLOCK")){
+					fixblock = false;
+				}
+				else if (response.startsWith("FIXRAI")){
+					fixedRaise = Integer.parseInt(response.substring(7));
+				}
 			}
 		}
 		finally {
@@ -487,11 +525,32 @@ public class PokerClient {
 			buttons[0].setEnabled(true);
 		}
 		//raise
-		if(!available_bet && Integer.parseInt(activeResults[MyID][3].getText()) <= highestWage() &&
-				highestWage() - Integer.parseInt(activeResults[MyID][3].getText()) < Integer.parseInt(activeResults[MyID][2].getText())){
-			raiseText.setEnabled(true);
-			buttons[1].setEnabled(true);
+		switch(mode){
+			case NOLIMIT :
+				if(!available_bet && Integer.parseInt(activeResults[MyID][3].getText()) <= highestWage() &&
+					highestWage() - Integer.parseInt(activeResults[MyID][3].getText()) < Integer.parseInt(activeResults[MyID][2].getText())){
+					raiseText.setEnabled(true);
+					buttons[1].setEnabled(true);
+				}
+				break;
+			case POTLIMIT :
+				if(!available_bet && Integer.parseInt(activeResults[MyID][3].getText()) <= highestWage() &&
+					highestWage() - Integer.parseInt(activeResults[MyID][3].getText()) < Integer.parseInt(activeResults[MyID][2].getText())){
+					raiseText.setEnabled(true);
+					buttons[1].setEnabled(true);
+				}
+				break;
+			case FIXEDLIMIT :
+				if(!available_bet && !fixblock && Integer.parseInt(activeResults[MyID][3].getText()) <= highestWage() &&
+					highestWage() - Integer.parseInt(activeResults[MyID][3].getText()) < Integer.parseInt(activeResults[MyID][2].getText())){
+					raiseText.setEnabled(true);
+					raiseText.setText(Integer.toString(fixedRaise));
+					raiseText.setEditable(false);
+					buttons[1].setEnabled(true);
+				}
+				break;
 		}
+		
 		//check
 		if(Integer.parseInt(activeResults[MyID][3].getText()) == highestWage()){
 			buttons[2].setEnabled(true);

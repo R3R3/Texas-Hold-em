@@ -5,6 +5,7 @@ import java.util.ArrayList;
 import java.util.Random;
 
 import cards.and.stuff.*;
+import network.GameMode;
 
 public class Table {
 
@@ -16,7 +17,12 @@ public class Table {
 	public Coins pot;
 	public int player_with_highest_bet;
 	public int highest_bet;
+	private int fixedbounds = -1;
 	
+	public void setFixedbounds(int fixedbounds) {
+		this.fixedbounds = fixedbounds + 1;
+	}
+
 	public Table(int amount){
 		num_Players = amount;
 		prepareDeck(new StandardDeckBuilder());
@@ -175,10 +181,24 @@ public class Table {
 			highest_bet = players[change].highestBet; 
 			player_with_highest_bet = change;
 			notifyBet(false);
+			if(fixedbounds != -1){
+				fixedbounds--;
+				if(fixedbounds == 0){
+					blockRaise();
+				}
+			}
 		}
 		updateHighestBet();
 		refreshPlayers();
 		
+	}
+
+	protected void blockRaise() {
+		for(Player p : players){
+			if(p.getPlayerState() != PlayerState.QUITED){
+				p.output.println("FIXLOCK");
+			}
+		}
 	}
 
 	private void refreshPlayers() {
@@ -277,5 +297,37 @@ public class Table {
 			}
 		}
 		
+	}
+
+	public void notifyGameMode(GameMode mode) {
+		for(Player p : players){
+			switch(mode){
+				case POTLIMIT :
+					p.output.println("MODE P");
+					break;
+				case NOLIMIT :
+					p.output.println("MODE N");
+					break;
+				case FIXEDLIMIT :
+					p.output.println("MODE F");
+					break;
+			}
+		}
+		
+	}
+
+	public void notifyFixedstuff(int fixedraise, int fixedbounds) {
+		this.fixedbounds = fixedbounds +1;
+		for(Player p : players){
+			p.output.println("FIXRAI " + Integer.toString(fixedraise));
+		}
+	}
+
+	public void notifyfixedunlock() {
+		for(Player p: players){
+			if(p.getPlayerState() != PlayerState.QUITED){
+				p.output.println("FIXUNLOCK");
+			}
+		}
 	}
 }
