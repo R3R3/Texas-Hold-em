@@ -298,8 +298,12 @@ public class Game {
 
 	public boolean endAuction(int actual) {	
 		int wage = table.highest_bet;
-		if(!table.firstBet && table.players[actual].isDealer){
-			return true;
+		if(parameters.getActualBB() == actual && table.highest_bet == parameters.getBigBlind() && table.players[actual].isAll_in== true)
+		{
+			return false;
+		}
+		if(!table.firstBet && !table.players[actual].isDealer){
+			return false;
 		}
 		for(int i = 0 ; i < table.players.length;i++)
 		{
