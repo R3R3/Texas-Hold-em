@@ -259,7 +259,7 @@ public class Table {
 		prepareTableCards();
 	}
 
-	public void sendReset() {
+	public void sendReset() throws NotEnoughCoins, InterruptedException {
 		canWinPlayers = new ArrayList<Player> ();
 		for(Player p:players){
 			p.output.println("RESET");
@@ -338,11 +338,26 @@ public class Table {
 
 	public void finalizeCash() {
 		for(Player p: players){
-			if(p.getPlayerState() != PlayerState.QUITED){
-				for(int i=0;i<num_Players;i++){
-					p.output.println("");
+			for(int i=0;i<num_Players;i++){
+				if (p.getID() == i){
+					p.output.println("CASH " + Integer.toString(p.coins.amount()));
+					p.output.println("WAGE " + Integer.toString(p.actualWage));
+					p.output.println("POT " + Integer.toString(pot.amount()));
+				} else {
+					p.output.println("OP_CASH " + Integer.toString(i) + " " + Integer.toString(players[i].coins.amount()));
+					p.output.println("OP_WAGE " + Integer.toString(i) + " " + Integer.toString(players[i].actualWage));
+					p.output.println("POT " + Integer.toString(pot.amount()));
 				}
 			}
 		}
+	}
+
+	public void resetPot() {
+		for(Player p: players){
+			p.actualWage = 0;
+			p.tempPot = 0;
+			p.highestBet = 0;
+		}
+		pot.reset();
 	}
 }

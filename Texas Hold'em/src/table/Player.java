@@ -93,7 +93,6 @@ public class Player extends Thread{
 							output.println("INACTIVE");
 						} catch (NotEnoughCoins e) {
 							e.printStackTrace();
-							System.out.println("breakpoint in bet (player)?");
 						}
 					}
 					else if(response.startsWith("RAISE")){

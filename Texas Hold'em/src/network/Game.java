@@ -101,10 +101,10 @@ public class Game {
 		auction(false);
 		TimeUnit.MILLISECONDS.sleep(500);
 		findWinners();
-		table.refreshPlayers();
+		table.finalizeCash();
 		revealCards();
 		TimeUnit.SECONDS.sleep(15);
-		table.pot.reset();
+		table.resetPot();
 		
 	}
 	
@@ -129,7 +129,7 @@ public class Game {
 	}
 
 
-	protected void resetBoard() {
+	protected void resetBoard() throws NotEnoughCoins, InterruptedException {
 		table.resetTableCards();
 		table.resetDeck();
 		table.sendReset();
@@ -236,9 +236,10 @@ public class Game {
 			if(i == parameters.getPlayerNum()){i=0;}
 			if(table.players[i].getPlayerState() == PlayerState.FOLDED 
 					|| table.players[i].getPlayerState() == PlayerState.QUITED
-					|| table.players[i].isAll_in){System.out.println("breakpoint 1.5");continue;}
+					|| table.players[i].isAll_in){i++;continue;}
 			table.players[i].setPlayerState(PlayerState.ACTIVE);
 			table.players[i].output.println("ACTIVE");
+			table.players[i].output.println("MESSAGE Your Turn");
 			while (table.players[i].getPlayerState() == PlayerState.ACTIVE){
 				TimeUnit.MILLISECONDS.sleep(100);
 			}

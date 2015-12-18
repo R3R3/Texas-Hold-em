@@ -38,7 +38,7 @@ public class GameTest {
 	}
 	
 	@Test
-	public void resetTest(){
+	public void resetTest() throws NotEnoughCoins, InterruptedException{
 		game.resetBoard();
 		
 	}

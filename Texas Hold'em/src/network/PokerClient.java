@@ -407,6 +407,8 @@ public class PokerClient {
 			activeResults[i][4].setText(" ");
 			activeResults[i][5].setText(" ");
 		}
+		
+		updatePot(0);
 	}
 
 	protected void updateDealer(int i) {

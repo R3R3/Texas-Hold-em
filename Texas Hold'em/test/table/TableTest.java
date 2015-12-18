@@ -202,7 +202,7 @@ public class TableTest {
 	}
 	
 	@Test
-	public void signalTest() throws IOException{
+	public void signalTest() throws IOException, NotEnoughCoins, InterruptedException{
 		
 		t.players[1].setPlayerState(PlayerState.QUITED);
 		t.sendReset();
