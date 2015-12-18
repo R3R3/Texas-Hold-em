@@ -47,6 +47,9 @@ public class GameTest {
 	public void revealTest(){
 		t.give2CardsToPlayers();
 		game.revealCards();
+		t.players[1].setPlayerState(PlayerState.FOLDED);
+		t.players[2].setPlayerState(PlayerState.QUITED);
+		game.revealCards();
 		
 	}
 	
@@ -66,13 +69,15 @@ public class GameTest {
 		game.parameters.setActualDealer(0);
 		game.parameters.setSmallBlind(10);
 		game.parameters.setBigBlind(20);
-		game.setBlinds();
+		game.parameters.setMode(GameMode.FIXEDLIMIT);
+		game.parameters.setFixedbounds(5);
+		game.setBlinds();		
 		
 		assertEquals(1,game.parameters.getActualSB());
 		assertEquals(2,game.parameters.getActualBB());
 		assertEquals(10,t.players[1].actualWage);
 		assertEquals(20,t.players[2].actualWage);
-		
+		assertEquals(5,t.getFixedbounds());
 	}
 	
 	@Test

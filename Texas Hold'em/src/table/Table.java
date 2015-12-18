@@ -17,10 +17,15 @@ public class Table {
 	public Coins pot;
 	public int player_with_highest_bet;
 	public int highest_bet;
-	private int fixedbounds = -1;
+	protected int fixedbounds = -1;
 	
 	public void setFixedbounds(int fixedbounds) {
-		this.fixedbounds = fixedbounds + 1;
+		this.fixedbounds = fixedbounds;
+		this.fixedbounds++;
+	}
+	
+	public int getFixedbounds(){
+		return fixedbounds;
 	}
 
 	public Table(int amount){
@@ -48,11 +53,11 @@ public class Table {
 				} else {
 					int j;
 					for(j = i;j<num_Players;j++){
+						if(j+1 == num_Players){j=-1;}
 						if(players[j+1].getPlayerState() != PlayerState.QUITED){
 							players[j+1].isDealer = true;
 							return j+1;
 						}
-						if(j+1 == num_Players){j=-2;}
 					}
 				}
 			}

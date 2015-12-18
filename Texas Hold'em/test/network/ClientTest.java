@@ -87,6 +87,101 @@ public class ClientTest {
 	
 	}
 	
+	@Test
+	public void setActiveTest() throws Exception{
+		socket = new ServerSocket(1234);
+		
+		String[] args = new String[0];
+		String serveraddress = (args.length == 0) ? "localhost" : args[0];
+		PokerClient client = new PokerClient(serveraddress);
+		client.frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+		client.frame.setSize(400, 400);
+		client.frame.setResizable(false);
+		client.frame.setVisible(true);
+		client.setMainBoard(4);
+		client.setBasecash(100);
+		client.setMyID(0);
+		client.mode = GameMode.NOLIMIT;
+		client.setInactive();
+		client.activeResults[0][3].setText("30");
+		client.activeResults[1][3].setText("50");
+		client.available_bet = false;
+		client.setActive();
+		assertTrue(client.buttons[1].isEnabled());
+		assertTrue(client.buttons[3].isEnabled());
+		assertFalse(client.buttons[0].isEnabled());
+		
+		client.setInactive();
+		client.mode = GameMode.POTLIMIT;
+		client.setActive();
+		assertTrue(client.buttons[1].isEnabled());
+		assertTrue(client.buttons[3].isEnabled());
+		assertFalse(client.buttons[0].isEnabled());
+		
+		client.setInactive();
+		client.activeResults[1][3].setText("200");
+		client.setActive();
+		assertTrue(client.buttons[5].isEnabled());
+		assertFalse(client.buttons[3].isEnabled());
+	}
+	
+	@Test
+	public void setFixedActiveTest() throws Exception{
+		socket = new ServerSocket(1234);
+		
+		String[] args = new String[0];
+		String serveraddress = (args.length == 0) ? "localhost" : args[0];
+		PokerClient client = new PokerClient(serveraddress);
+		client.frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+		client.frame.setSize(400, 400);
+		client.frame.setResizable(false);
+		client.frame.setVisible(true);
+		client.setMainBoard(4);
+		client.setBasecash(100);
+		client.setMyID(0);
+		client.mode = GameMode.FIXEDLIMIT;
+		client.fixedRaise = 20;
+		client.available_bet = false;
+		client.fixblock = false;
+		client.setInactive();
+		client.activeResults[0][3].setText("30");
+		client.activeResults[1][3].setText("30");
+		assertFalse(client.buttons[2].isEnabled());
+		client.setActive();
+		assertTrue(client.buttons[2].isEnabled());
+		assertEquals("20",client.raiseText.getText());
+	}
+	
+	@Test
+	public void potraiseTest() throws Exception{
+		socket = new ServerSocket(1234);
+		
+		String[] args = new String[0];
+		String serveraddress = (args.length == 0) ? "localhost" : args[0];
+		PokerClient client = new PokerClient(serveraddress);
+		client.frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+		client.frame.setSize(400, 400);
+		client.frame.setResizable(false);
+		client.frame.setVisible(true);
+		client.setMainBoard(4);
+		client.setBasecash(100);
+		client.setMyID(0);
+		client.mode = GameMode.POTLIMIT;
+		client.activeResults[0][3].setText("20");
+		client.activeResults[1][3].setText("30");
+		client.updatePot(50);
+		
+		client.raiseText.setText("10");
+		assertEquals("RAISE 10",client.raiseAction());
+		client.raiseText.setText("0");
+		assertEquals("RAISE ",client.raiseAction());
+		client.raiseText.setText("60");
+		assertEquals("RAISE 60",client.raiseAction());
+		client.raiseText.setText("61");
+		assertEquals("RAISE ",client.raiseAction());
+		
+	}
+	
 	@After
 	public void cleanUp() throws IOException{
 		socket.close();
