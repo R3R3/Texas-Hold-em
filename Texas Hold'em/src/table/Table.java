@@ -10,6 +10,7 @@ import network.GameMode;
 public class Table {
 
 	public TableCards tableCards;
+	public boolean firstBet = false;
 	public Deck deck;
 	public Player[] players;
 	public ArrayList<Player> canWinPlayers;
@@ -291,6 +292,7 @@ public class Table {
 	}
 
 	public void notifyBet(boolean availableBet) {
+		firstBet = !availableBet;
 		for(Player p: players){
 			if(p.getPlayerState() != PlayerState.QUITED){
 				if(availableBet){
